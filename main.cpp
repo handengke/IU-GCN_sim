@@ -84,7 +84,7 @@ int main(){
     prtList(locator.nodeList);
 
     //p1=3, THtmp=4
-    locator.detect_hub(3,4);
+    locator.detect_hub(3,5);
 
     cout<<endl;
     prtList(locator.nodeList);
@@ -92,7 +92,8 @@ int main(){
     locator.task_assign();
     cout<<endl;
 
-    locator.TP_BFS(4,5,2);
+    //th,cmax,p2
+    locator.TP_BFS(5,20,2);
 
     // node node0=node();
     // node0.id=0;
