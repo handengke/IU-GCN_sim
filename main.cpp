@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<string>
+#include<bits/stdc++.h>
 #include"Locator.h"
 
 using namespace std;
@@ -19,7 +20,6 @@ void build_nodeList(vector<vector<int>> adjm,vector<node>& ndList)
     }
 }
 
-
 //输出列表
 void prtList(vector<node>& l){
     for(auto n:l){
@@ -31,24 +31,50 @@ void prtList(vector<node>& l){
     cout<<endl;
 }
 
+//读取邻接矩阵文件
+void readFile(string filename, vector<vector<int>>& matrix){
+    ifstream inFile(filename);
+    string lineStr;
+    while(getline(inFile,lineStr))
+    {
+        //cout<<"--"<<lineStr<<"--"<<endl;
+        //将结果保存为二维表结构
+        stringstream ss(lineStr);
+        string str;
+        vector<int> lineArray;
+        //devide the numbers by "\t"
+        while(getline(ss,str,'\t'))
+        {
+            istringstream ss(str);
+            int temp=0;
+            ss>>temp;
+            lineArray.push_back(temp);
+        }
+        matrix.push_back(lineArray); 
+    }
+}
+
 int main(){
     
-    vector<vector<int>> m=\
-    {
-        {0,0,1,1,0,0,0,0,0},
-        {0,0,1,1,0,0,0,0,0},
-        {1,1,0,1,1,0,1,0,0},
-        {1,1,1,0,0,0,0,0,0},
-        {0,0,1,0,0,0,0,0,0},
-        {0,0,0,0,0,0,1,0,1},
-        {0,0,1,0,0,1,0,1,1},
-        {0,0,0,0,0,0,1,0,1},
-        {0,0,0,0,0,1,1,1,0}
-    };
+    // vector<vector<int>> m=\
+    // {
+    //     {0,0,1,1,0,0,0,0,0},
+    //     {0,0,1,1,0,0,0,0,0},
+    //     {1,1,0,1,1,0,1,0,0},
+    //     {1,1,1,0,0,0,0,0,0},
+    //     {0,0,1,0,0,0,0,0,0},
+    //     {0,0,0,0,0,0,1,0,1},
+    //     {0,0,1,0,0,1,0,1,1},
+    //     {0,0,0,0,0,0,1,0,1},
+    //     {0,0,0,0,0,1,1,1,0}
+    // };
+
+    vector<vector<int>> adj_m;
+    string filename="./datasets/cora/cora_cites.txt";
+    readFile(filename,adj_m);
 
     vector<node> nList;
-
-    build_nodeList(m,nList);
+    build_nodeList(adj_m,nList);
     prtList(nList);
 
     cout<<endl;
