@@ -36,7 +36,7 @@ void readcsv(string filename, vector<vector<int>>& edges){
 }
 
 int main(){
-    /*vector<int> v {1,2,4,5,6};
+    vector<int> v {1,2,4,5,6};
     // remove(v.begin(),v.end(),4);
     v.erase(find(v.begin(),v.end(),4));
     for(auto e: v)
@@ -44,7 +44,8 @@ int main(){
 
     cout<<endl;
     cout<<v.size()<<" "<<v.capacity();
-    return 0;*/
+    cout<<"the last number of v is: "<<v.back();
+    return 0;
 //omp.cc
     // int count=0;
     // thread* th=new thread[4];
@@ -53,13 +54,13 @@ int main(){
     // }
     //  for (int i = 0; i < 4; i++)
     //     th[i].join();//等待子线程结束
-    vector<vector<int>> edgList;
-    string filename="./test_file";
-    readcsv(filename,edgList);
+    // vector<vector<int>> edgList;
+    // string filename="./test_file";
+    // readcsv(filename,edgList);
 
-    for(auto e: edgList)
-    {
-        cout<<e[0]<<"---"<<e[1]<<endl;
-    }
+    // for(auto e: edgList)
+    // {
+    //     cout<<e[0]<<"---"<<e[1]<<endl;
+    // }
 
 }

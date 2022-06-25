@@ -6,7 +6,7 @@
 
 using namespace std;
 
-//构造初始顶点列表
+//build the initial nodeList
 void build_nodeList(vector<vector<int>> adjm,vector<node>& ndList)
 {
     for(int i=0;i<adjm.size();i++)
@@ -20,7 +20,7 @@ void build_nodeList(vector<vector<int>> adjm,vector<node>& ndList)
     }
 }
 
-//输出列表
+//print the node_list
 void prtList(vector<node>& l){
     for(auto n:l){
         cout<<"node id: "<<n.id<<endl;
@@ -31,7 +31,7 @@ void prtList(vector<node>& l){
     cout<<endl;
 }
 
-//读取邻接矩阵文件
+//read the adjacent matrix generated from py
 void readFile(string filename, vector<vector<int>>& matrix){
     ifstream inFile(filename);
     string lineStr;
@@ -56,25 +56,26 @@ void readFile(string filename, vector<vector<int>>& matrix){
 
 int main(){
     
-    // vector<vector<int>> m=\
-    // {
-    //     {0,0,1,1,0,0,0,0,0},
-    //     {0,0,1,1,0,0,0,0,0},
-    //     {1,1,0,1,1,0,1,0,0},
-    //     {1,1,1,0,0,0,0,0,0},
-    //     {0,0,1,0,0,0,0,0,0},
-    //     {0,0,0,0,0,0,1,0,1},
-    //     {0,0,1,0,0,1,0,1,1},
-    //     {0,0,0,0,0,0,1,0,1},
-    //     {0,0,0,0,0,1,1,1,0}
-    // };
+    vector<vector<int>> m=\
+    {
+        {0,0,1,1,0,0,0,0,0},
+        {0,0,1,1,0,0,0,0,0},
+        {1,1,0,1,1,0,1,0,0},
+        {1,1,1,0,0,0,0,0,0},
+        {0,0,1,0,0,0,0,0,0},
+        {0,0,0,0,0,0,1,0,1},
+        {0,0,1,0,0,1,0,1,1},
+        {0,0,0,0,0,0,1,0,1},
+        {0,0,0,0,0,1,1,1,0}
+    };
 
-    vector<vector<int>> adj_m;
-    string filename="./datasets/cora/cora_cites.txt";
-    readFile(filename,adj_m);
+    // vector<vector<int>> adj_m;
+    // string filename="./datasets/cora/cora_cites.txt";
+    // readFile(filename,adj_m);
 
     vector<node> nList;
-    build_nodeList(adj_m,nList);
+    // build_nodeList(adj_m,nList);
+    build_nodeList(m,nList);
     prtList(nList);
 
     cout<<endl;
@@ -84,7 +85,7 @@ int main(){
     prtList(locator.nodeList);
 
     //p1=3, THtmp=4
-    locator.detect_hub(3,5);
+    locator.detect_hub(3,4);
 
     cout<<endl;
     prtList(locator.nodeList);
@@ -93,7 +94,9 @@ int main(){
     cout<<endl;
 
     //th,cmax,p2
-    locator.TP_BFS(5,20,2);
+    locator.TP_BFS(4,100,2);
+
+    locator.prtLislands();
 
     // node node0=node();
     // node0.id=0;
@@ -104,7 +107,6 @@ int main(){
     // else{
     //     cout<<"no"<<endl;
     // }
-
 
     return 0;
 }

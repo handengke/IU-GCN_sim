@@ -25,7 +25,43 @@ void island_locator::remove_vlocal_from_vglobal(vector<int> vlocal, vector<int>&
     }
 }
 
+//to merge the small islands, especially the islands that only have one island_node except the hub to build a hub_island
+//@param island is the input island
+//@output none, modify Lisland in place
+void island_locator::merge_small_island(Island& island){
+    Island& nearest_island=Lislands.back();
+    if(nearest_island.first.front()==island.first.front()){
+        for(auto n:island.second)
+            nearest_island.second.push_back(n);
+    }
+}
+
+//print the final Lislands
+void island_locator::prtLislands(){
+    int count=1;
+    for(auto island:Lislands){
+        auto hubs=island.first;
+        auto iNodes=island.second;
+
+        cout<<"*********************************************"<<endl;
+        cout<<"island "<<count++<<": "<<endl;
+
+        cout<<"hub_nodes are: ";
+        for(auto h:hubs) cout<<h<<" ";
+        cout<<endl;
+
+        cout<<"island_nodes are: ";
+        for(auto i:iNodes) cout<<i<<" ";
+        cout<<endl;
+
+        cout<<"*********************************************"<<endl;
+    }
+}
+
+
 //detect hub_node
+//@param p1 is the parallelism of hub_dector
+//@param THtmp is the threshold to identify a hub
 void island_locator::detect_hub(int p1, int THtmp){
     int end_bound=nodeList.size()/p1;
     for(int b=0;b<end_bound;b++){
@@ -48,6 +84,7 @@ void island_locator::detect_hub(int p1, int THtmp){
 }
 
 //generate bfs-task
+//no input,no output, modify the task queue in place
 void island_locator::task_assign(){
     while(!hub_buffer.empty()){
         node cur_node=hub_buffer.front();
@@ -61,6 +98,9 @@ void island_locator::task_assign(){
 }
 
 //bfs engine to build islands
+//@param TH is the threshold to identify the hub node
+//@param Cmax is the most number of island_nodes that an island can hold
+//@param p2 is the parallelism of bfsEngine
 void island_locator::TP_BFS(int TH,int Cmax,int p2){
     while (!tasks.empty())
     {
@@ -115,21 +155,24 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     query+=1;
                 }
                 if(!discardFlag){
-                    pair<vector<int>,vector<int>> new_island {Vlocal,hlocal};
+                    Island new_island {hlocal,Vlocal};
 
                     cout<<"An island is built！"<<endl;
                     cout<<"hub_nodes are:";
-                    for(auto h:new_island.second){
+                    for(auto h:new_island.first){
                         cout<<h<<" ";
                     }
                     cout<<", and island_nodes are:";
-                    for(auto v:new_island.first){
+                    for(auto v:new_island.second){
                         cout<<v<<" ";
                     }
                     cout<<endl;
                     cout<<"------------------------------"<<endl;
-
-                    Lislands.push_back(new_island);                
+                    
+                    if(query>Cmin)  //when this built island is too small, then merge it
+                        Lislands.push_back(new_island);
+                    else
+                        merge_small_island(new_island);                
                 }
             }
             else continue;

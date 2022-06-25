@@ -4,7 +4,10 @@
 #include<vector>
 #include<utility>
 #include<algorithm>
+
 using namespace std;
+
+typedef pair<vector<int>,vector<int>> Island;
 
 /*
 //顶点类型
@@ -49,26 +52,37 @@ private:
     queue<pair<int,int>> tasks={};
     //nodes that have been visited
     vector<int> Vglobal={};
+    //the least number of nodes in an island
+    int Cmin=1;
 
 public:
     //顶点列表
     vector<node> nodeList={};
     //island列表
-    vector<pair<vector<int>,vector<int>>> Lislands={};
+    vector<Island> Lislands={};
 
     //类构造函数,无构造参数
     island_locator(){}
     //类构造函数，带初始化参数
     island_locator(vector<node> nL):nodeList{nL}{}
+
     //发现hub结点
     void detect_hub(int p1, int THtmp);
     //生成BFS遍历任务
     void task_assign();
     //进行BFS遍历并生成islands
     void TP_BFS(int TH,int Cmax,int p2);
+
     //检查某顶点是否已经被分类为hub_node或者island_node
     bool if_already_classifed(node& destNd);
 
     //在遇到某顶点已被访问过时，remov vlocal from vglobal
     void remove_vlocal_from_vglobal(vector<int>,vector<int>&);
+    
+    //合并hub周围单个岛顶点的小岛
+    void merge_small_island(Island&);
+
+    //print the Lisaldns
+    void prtLislands();
+
 };
