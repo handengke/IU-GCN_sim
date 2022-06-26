@@ -53,8 +53,10 @@ private:
     queue<pair<int,int>> tasks={};
     //nodes that have been visited
     vector<int> Vglobal={};
+    //hubs that have been used as central node to build hub_islands
+    vector<int> Hlocal={};
     //the least number of nodes in an island
-    int Cmin=1;
+    int Cmin=2;
 
 public:
     //顶点列表
@@ -80,8 +82,14 @@ public:
     //在遇到某顶点已被访问过时，remov vlocal from vglobal
     void remove_vlocal_from_vglobal(vector<int>,vector<int>&);
     
-    // 将生成的island放入Lislands，并合并hub周围单个岛顶点的小岛
+    // 将初步生成的island放入Lislands，并合并hub周围单个岛顶点的small island
     void push_and_merge(Island&,int);
+
+    //为island添加shell
+    void add_shell(Island&);
+
+    //构建hub_islands
+    void build_hubIslands();
 
     //print the Lisaldns
     void prtLislands();

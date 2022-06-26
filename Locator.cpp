@@ -37,9 +37,10 @@ void island_locator::push_and_merge(Island& island,int nodeNum){
             if(nearest_island.first.front()==island.first.front()){
                 for(auto n:island.second)
                     nearest_island.second.push_back(n);
+                cout<<"this island needs to be merged with its previous island since it's small!"<<endl;
             }
             else{
-                //Lislands.push_back(island);
+                Lislands.push_back(island);
                 cout<<"this island cannot be merged since it's the first small island of this hub!"<<endl;
             }                       
         }
@@ -49,18 +50,26 @@ void island_locator::push_and_merge(Island& island,int nodeNum){
                 if(nearest_island.first.front()==island.first.front()){
                     for(auto n:island.second)
                         nearest_island.second.push_back(n);
+                    cout<<"this island needs to be merged with its previous island since previous island is small!"<<endl;
                 }
                 else{
-                    //Lislands.push_back(island);
                     cout<<"this island dosen't need to be merged since its previous island is not small!"<<endl;
                 }  
             }
             else Lislands.push_back(island);
         }
+        cout<<"------------------------------"<<endl;
     }
     else
         //if Lisalnds is empty,push directly
+        cout<<"------------------------------"<<endl;
         Lislands.push_back(island);
+}
+
+
+//build the hub_islands that are used to update hub nodes
+void island_locator::build_hubIslands(){
+    
 }
 
 //print the final Lislands
@@ -135,17 +144,16 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
             pair<int,int> cur_task=tasks.front();
             tasks.pop();
             vector<int> hlocal {cur_task.first};
-            vector<int> Vlocal;
+            vector<int> Vlocal {};
+
+            cout<<"processing task is {"<<cur_task.first<<", "<<cur_task.second<<"}"<<endl;
+
             //query track of the number of nodes whose neighbors have been visited totally
             //count track of the number of nodes that have been visited by any of the PEs
-            
             int query=0,count=1;
 
             if(nodeList[cur_task.second].get_degree()<TH){
                 Vlocal.push_back(cur_task.second);
-                if(find(Vglobal.begin(),Vglobal.end(),cur_task.second)==Vglobal.end())
-                    Vglobal.push_back(cur_task.second);
-                else continue;
 
                 bool breakFlag=false;
                 bool discardFlag=false;
@@ -164,7 +172,11 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                 Vlocal.push_back(n.id);
                                 Vglobal.push_back(n.id);
                                 if(Vlocal.size()>Cmax)
+                                {
                                     breakFlag=true; 
+                                    cout<<"Vlocal.size()>Cmax,so break!"<<endl;
+                                    break;
+                                } 
                             }
                             else{
                                 discardFlag=true;
@@ -172,38 +184,41 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                 break;
                             }
                         }
-                        else{
-                            if(find(hlocal.begin(),hlocal.end(),n.id)==hlocal.end())
-                            {
-                                hlocal.push_back(n.id);   
-                            }
+                        else{ 
+                            hlocal.push_back(n.id);   
                         }
                     }
                     query+=1;
                 }
-                if(!discardFlag){
-                    Island new_island {hlocal,Vlocal};
+                Island new_island {hlocal,Vlocal};
 
-                    cout<<"An island is built！"<<endl;
-                    cout<<"hub_nodes are:";
-                    for(auto h:new_island.first){
-                        cout<<h<<" ";
-                    }
-                    cout<<", and island_nodes are:";
-                    for(auto v:new_island.second){
-                        cout<<v<<" ";
-                    }
-                    cout<<endl;
-                    cout<<"------------------------------"<<endl;
-                    
-                    //push new island into Lisland, and check if it's too small so that should be merged
-                    // or should be merged with previous small island
-                    push_and_merge(new_island,query);
+                if (discardFlag)
+                    cout<<"this task has been dicard since this region of graph have been visited by other PEs!(breakFlag=true)"<<endl;
+                else
+                    cout<<"this task finished normally!(breakFlag=false)"<<endl;
+
+                cout<<"An island is built！"<<endl;
+                cout<<"hub_nodes are:";
+                for(auto h:new_island.first){
+                    cout<<h<<" ";
                 }
+                cout<<", and island_nodes are:";
+                for(auto v:new_island.second){
+                    cout<<v<<" ";
+                }
+                cout<<endl;
+                    
+                //push new island into Lisland, and check if it's too small so that should be merged
+                // or should be merged with previous small island
+                push_and_merge(new_island,query);
             }
-            else continue;
+            else 
+            {
+                cout<<"this task has benn dropped since node0 is a hub too!"<<endl;
+                continue;
+            }
     }
-    //}
+    //} 
 }
 
 

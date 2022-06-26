@@ -36,15 +36,25 @@ void readcsv(string filename, vector<vector<int>>& edges){
 }
 
 int main(){
-    vector<int> v {1,2,4,5,6};
+    // vector<int> v {1,2,4,5,6};
     // remove(v.begin(),v.end(),4);
-    v.erase(find(v.begin(),v.end(),4));
-    for(auto e: v)
-        cout<<e<<' ';
+    // v.erase(find(v.begin(),v.end(),4));
+    // for(auto e: v)
+    //     cout<<e<<' ';
 
-    cout<<endl;
-    cout<<v.size()<<" "<<v.capacity();
-    cout<<"the last number of v is: "<<v.back();
+    // cout<<endl;
+    // cout<<v.size()<<" "<<v.capacity();
+    // vector<int> v1{1,3,4,5};
+    // cout<<"the last number of v is: "<<v.back()<<endl;
+    // if(v.front()==v1.front()) cout<<"YES!!"<<endl;
+    int i=5;
+    while (i--)
+    {
+        vector<int> v;
+        v.push_back(i);
+        cout<<"the size of v is "<<v.size()<<endl;
+    }
+    
     return 0;
 //omp.cc
     // int count=0;
