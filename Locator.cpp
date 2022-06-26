@@ -27,13 +27,40 @@ void island_locator::remove_vlocal_from_vglobal(vector<int> vlocal, vector<int>&
 
 //to merge the small islands, especially the islands that only have one island_node except the hub to build a hub_island
 //@param island is the input island
+//@param nodeNum is the number of island_nodes of this island, represented by qeury(=count)
 //@output none, modify Lisland in place
-void island_locator::merge_small_island(Island& island){
-    Island& nearest_island=Lislands.back();
-    if(nearest_island.first.front()==island.first.front()){
-        for(auto n:island.second)
-            nearest_island.second.push_back(n);
+void island_locator::push_and_merge(Island& island,int nodeNum){
+    if(!Lislands.empty()){
+        Island& nearest_island=Lislands.back();
+        if(nodeNum<=Cmin) // if current island is small
+        {
+            if(nearest_island.first.front()==island.first.front()){
+                for(auto n:island.second)
+                    nearest_island.second.push_back(n);
+            }
+            else{
+                //Lislands.push_back(island);
+                cout<<"this island cannot be merged since it's the first small island of this hub!"<<endl;
+            }                       
+        }
+        else //current island is not small,but we still have to check if its previous island is small and need to merge with is
+        {
+            if(nearest_island.second.size()<=Cmin){
+                if(nearest_island.first.front()==island.first.front()){
+                    for(auto n:island.second)
+                        nearest_island.second.push_back(n);
+                }
+                else{
+                    //Lislands.push_back(island);
+                    cout<<"this island dosen't need to be merged since its previous island is not small!"<<endl;
+                }  
+            }
+            else Lislands.push_back(island);
+        }
     }
+    else
+        //if Lisalnds is empty,push directly
+        Lislands.push_back(island);
 }
 
 //print the final Lislands
@@ -169,10 +196,9 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     cout<<endl;
                     cout<<"------------------------------"<<endl;
                     
-                    if(query>Cmin)  //when this built island is too small, then merge it
-                        Lislands.push_back(new_island);
-                    else
-                        merge_small_island(new_island);                
+                    //push new island into Lisland, and check if it's too small so that should be merged
+                    // or should be merged with previous small island
+                    push_and_merge(new_island,query);
                 }
             }
             else continue;

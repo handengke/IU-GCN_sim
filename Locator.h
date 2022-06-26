@@ -7,6 +7,7 @@
 
 using namespace std;
 
+//{{hub_list}, {island_node list}}
 typedef pair<vector<int>,vector<int>> Island;
 
 /*
@@ -79,8 +80,8 @@ public:
     //在遇到某顶点已被访问过时，remov vlocal from vglobal
     void remove_vlocal_from_vglobal(vector<int>,vector<int>&);
     
-    //合并hub周围单个岛顶点的小岛
-    void merge_small_island(Island&);
+    // 将生成的island放入Lislands，并合并hub周围单个岛顶点的小岛
+    void push_and_merge(Island&,int);
 
     //print the Lisaldns
     void prtLislands();
