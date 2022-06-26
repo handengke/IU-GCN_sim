@@ -184,7 +184,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                 break;
                             }
                         }
-                        else{ 
+                        else{
                             hlocal.push_back(n.id);   
                         }
                     }
@@ -210,7 +210,8 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     
                 //push new island into Lisland, and check if it's too small so that should be merged
                 // or should be merged with previous small island
-                push_and_merge(new_island,query);
+                // push_and_merge(new_island,query);
+                Lislands.push_back(new_island);
             }
             else 
             {
