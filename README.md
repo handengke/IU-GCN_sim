@@ -15,7 +15,10 @@ We decided to add but not remove here.
     If we find the start point in Vglobal, that means it has been identified as an island_node, we drop this task directly and wait for the next one.
 ## Some optimizations based on the raw algorithm:
 - *OP1*: We noticed that it'll generate lots of small islands in which there only exists one or two island_nodes except the hubs. This may lead to that the enhancement of the spatial locality will be limited, in the meanwhile, it'll increasing complexity of island management. So we add an `push_and_merge()` func to add islands into Lislands and check if it needs to be merged with other islands according to the minimum number of an island,i.e.Cmin.
-- *OP2*：
+- *OP2*：Apparently, organizing vertex in the form of islands can definately improve the spatial locality of island_nodes, however, there still exist two points worth thinking:
+    - Which nodes are responsible for updating hubs?
+    - What if a node in an island has edegs with other nodes in other different island?
 
+    To tackle these issues, we first propose a novel concept,i.e. the hub_island to update the hubs. Additionally we add a shell for every island. The terminology ‘shell’ we use here is corresponding to the second concern we put forward abobe. If an island was built with some edges 'disconnected' because of the limitation from Cmax, then we record the nodes which are supposed to be one of the island_nodes of this island but actually in other islands as shell_nodes for this island. In this way, in every GCN layer, each island has only communication with the nodes in the same island. **However, this will raise another thorny issue, i.e. how to synchronize these shell_nodes when they are updated by the islands they originally belong to.**(TODO)
 
 We found that after the islands build process has finished, the total number of hubs plus island_nodes is smaller than the origin node numbers. Through data analysis, we found that there exists another type of nodes, it has only one neighbor and so as its neighbor. I think it's unavoidably so I do nothing about this.
