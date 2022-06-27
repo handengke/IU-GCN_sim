@@ -8,7 +8,7 @@
 using namespace std;
 
 //{{hub_list}, {island_node list}}
-typedef pair<vector<int>,vector<int>> Island;
+// typedef pair<vector<int>,vector<int>> Island;
 
 /*
 //顶点类型
@@ -41,6 +41,16 @@ struct node
 
     void invalid(){valid=false;};
 
+};
+
+struct Island
+{
+    vector<int> hub_list={};
+    vector<int> island_nodes={};
+    vector<int> shell_nodes={};
+
+    Island(){};
+    Island(vector<int> h,vector<int> n):hub_list{h},island_nodes(n){};
 };
 
 

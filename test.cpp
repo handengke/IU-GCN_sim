@@ -35,6 +35,17 @@ void readcsv(string filename, vector<vector<int>>& edges){
     }
 }
 
+struct Island
+{
+    vector<int> hub_list={};
+    vector<int> island_nodes={};
+    vector<int> shell_nodes={};
+
+    Island(){};
+    Island(vector<int> h,vector<int> n):hub_list{h},island_nodes(n){};
+};
+
+
 int main(){
     // vector<int> v {1,2,4,5,6};
     // remove(v.begin(),v.end(),4);
@@ -47,13 +58,24 @@ int main(){
     // vector<int> v1{1,3,4,5};
     // cout<<"the last number of v is: "<<v.back()<<endl;
     // if(v.front()==v1.front()) cout<<"YES!!"<<endl;
-    int i=5;
-    while (i--)
-    {
-        vector<int> v;
-        v.push_back(i);
-        cout<<"the size of v is "<<v.size()<<endl;
+    // int i=5;
+    // while (i--)
+    // {
+    //     vector<int> v;
+    //     v.push_back(i);
+    //     cout<<"the size of v is "<<v.size()<<endl;
+    // }
+    vector<int> a {1,2,3,4};
+    vector<int> b {3,2,1,4};
+    Island newIsland(a,b);
+    for(auto e: newIsland.hub_list){
+        cout<<e<<" ";
     }
+    cout<<endl;
+    for(auto e: newIsland.island_nodes){
+        cout<<e<<" ";
+    }
+    cout<<endl;    
     
     return 0;
 //omp.cc

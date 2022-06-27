@@ -4,8 +4,8 @@
 bool island_locator::if_already_classifed(node& destNd){
     bool flag=false;
     for(auto p: Lislands){
-        vector<int>& hub_nodes=p.first;
-        vector<int>& island_nodes=p.second;
+        vector<int>& hub_nodes=p.hub_list;
+        vector<int>& island_nodes=p.island_nodes;
         if(find(hub_nodes.begin(),hub_nodes.end(),destNd.id)!=hub_nodes.end() ||\
            find(island_nodes.begin(),island_nodes.end(),destNd.id)!=island_nodes.end()
         ){
@@ -34,22 +34,22 @@ void island_locator::push_and_merge(Island& island,int nodeNum){
         Island& nearest_island=Lislands.back();
         if(nodeNum<=Cmin) // if current island is small
         {
-            if(nearest_island.first.front()==island.first.front()){
-                for(auto n:island.second)
-                    nearest_island.second.push_back(n);
+            if(nearest_island.hub_list.front()==island.hub_list.front()){
+                for(auto n:island.island_nodes)
+                    nearest_island.island_nodes.push_back(n);
                 cout<<"this island needs to be merged with its previous island since it's small!"<<endl;
             }
             else{
                 Lislands.push_back(island);
-                cout<<"this island cannot be merged since it's the first small island of this hub!"<<endl;
+                cout<<"this island cannot be merged since it's the hub_list small island of this hub!"<<endl;
             }                       
         }
         else //current island is not small,but we still have to check if its previous island is small and need to merge with is
         {
-            if(nearest_island.second.size()<=Cmin){
-                if(nearest_island.first.front()==island.first.front()){
-                    for(auto n:island.second)
-                        nearest_island.second.push_back(n);
+            if(nearest_island.island_nodes.size()<=Cmin){
+                if(nearest_island.hub_list.front()==island.hub_list.front()){
+                    for(auto n:island.island_nodes)
+                        nearest_island.island_nodes.push_back(n);
                     cout<<"this island needs to be merged with its previous island since previous island is small!"<<endl;
                 }
                 else{
@@ -79,8 +79,8 @@ void island_locator::prtLislands(){
     int hubC=0,nodeC=0;
     int count=1;
     for(auto island:Lislands){
-        auto hubs=island.first;
-        auto iNodes=island.second;
+        auto hubs=island.hub_list;
+        auto iNodes=island.island_nodes;
 
         cout<<"*********************************************"<<endl;
         cout<<"island "<<count++<<": "<<endl;
@@ -213,7 +213,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     }
                     query+=1;
                 }
-                Island new_island {hlocal,Vlocal};
+                Island new_island(hlocal,Vlocal);
 
                 if (discardFlag)
                     cout<<"this task has been dropped since this region of graph have been visited by other PEs!(discardFlag=true)"<<endl;
@@ -222,11 +222,11 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
 
                 cout<<"An island is built！"<<endl;
                 cout<<"hub_nodes are:";
-                for(auto h:new_island.first){
+                for(auto h:new_island.hub_list){
                     cout<<h<<" ";
                 }
                 cout<<", and island_nodes are:";
-                for(auto v:new_island.second){
+                for(auto v:new_island.island_nodes){
                     cout<<v<<" ";
                 }
                 cout<<endl;
