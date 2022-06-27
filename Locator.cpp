@@ -148,6 +148,13 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
 
             cout<<"processing task is {"<<cur_task.first<<", "<<cur_task.second<<"}"<<endl;
 
+            //corresponding to Q3 in READE.md
+            if(find(Vglobal.begin(),Vglobal.end(),cur_task.second)!=Vglobal.end())
+            {
+                cout<<"this task is dropped because the BFS start point has been visited yet!"<<endl;
+                continue;
+            } 
+
             //query track of the number of nodes whose neighbors have been visited totally
             //count track of the number of nodes that have been visited by any of the PEs
             int query=0,count=1;
@@ -180,12 +187,15 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                             }
                             else{
                                 discardFlag=true;
-                                remove_vlocal_from_vglobal(Vlocal,Vglobal);
+                                //no need for remove, corresponding to Q2 in README.md
+                                //remove_vlocal_from_vglobal(Vlocal,Vglobal);
                                 break;
                             }
                         }
                         else{
-                            hlocal.push_back(n.id);   
+                            //corresponding to Q1 in READE.md
+                            if(find(hlocal.begin(),hlocal.end(),n.id)==hlocal.end())
+                                hlocal.push_back(n.id);   
                         }
                     }
                     query+=1;
@@ -193,9 +203,9 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                 Island new_island {hlocal,Vlocal};
 
                 if (discardFlag)
-                    cout<<"this task has been dicard since this region of graph have been visited by other PEs!(breakFlag=true)"<<endl;
+                    cout<<"this task has been dropped since this region of graph have been visited by other PEs!(discardFlag=true)"<<endl;
                 else
-                    cout<<"this task finished normally!(breakFlag=false)"<<endl;
+                    cout<<"this task finished normally!(discardFlag=false)"<<endl;
 
                 cout<<"An island is built！"<<endl;
                 cout<<"hub_nodes are:";
@@ -212,6 +222,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                 // or should be merged with previous small island
                 // push_and_merge(new_island,query);
                 Lislands.push_back(new_island);
+                cout<<"------------------------------"<<endl;
             }
             else 
             {
