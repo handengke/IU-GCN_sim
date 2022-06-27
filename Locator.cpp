@@ -61,9 +61,11 @@ void island_locator::push_and_merge(Island& island,int nodeNum){
         cout<<"------------------------------"<<endl;
     }
     else
+    {
         //if Lisalnds is empty,push directly
         cout<<"------------------------------"<<endl;
-        Lislands.push_back(island);
+        Lislands.push_back(island);        
+    }
 }
 
 
@@ -74,6 +76,7 @@ void island_locator::build_hubIslands(){
 
 //print the final Lislands
 void island_locator::prtLislands(){
+    int hubC=0,nodeC=0;
     int count=1;
     for(auto island:Lislands){
         auto hubs=island.first;
@@ -83,15 +86,25 @@ void island_locator::prtLislands(){
         cout<<"island "<<count++<<": "<<endl;
 
         cout<<"hub_nodes are: ";
-        for(auto h:hubs) cout<<h<<" ";
+        for(auto h:hubs)
+        {
+            cout<<h<<" ";
+            hubC++;
+        } 
         cout<<endl;
 
         cout<<"island_nodes are: ";
-        for(auto i:iNodes) cout<<i<<" ";
+        for(auto i:iNodes)
+        {
+            cout<<i<<" ";
+            nodeC++;
+        } 
         cout<<endl;
 
         cout<<"*********************************************"<<endl;
     }
+    cout<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"<<endl;
+    cout<<"total nodes number: "<<nodeC;
 }
 
 
@@ -220,8 +233,9 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     
                 //push new island into Lisland, and check if it's too small so that should be merged
                 // or should be merged with previous small island
-                // push_and_merge(new_island,query);
-                Lislands.push_back(new_island);
+                //corresponding to OP1 in README.md
+                push_and_merge(new_island,query);
+                // Lislands.push_back(new_island);
                 cout<<"------------------------------"<<endl;
             }
             else 

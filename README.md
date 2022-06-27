@@ -9,7 +9,13 @@
   - If we do them both, then we'll find that there exists some nodes which are in Lislands but not in Vglobal, it's obviously not right.
 We decided to add but not remove here. 
 - *Q3*: The raw algorithm use hub's neighbor as the start point of BFS, however, it only checks if the neighbor's neighbor is in Vglobal, but there is no operation performed here to check if the start point itself has been visited, obviously, if yes, then this task will be thoroughly. So we add the flowing codes:
-```c++
+    ```c++
     if(find(Vglobal.begin(),Vglobal.end(),cur_task.second)!=Vglobal.end()) continue;
-```
-If we find the start point in Vglobal, that means it has been identified as an island_node, we drop this task directly and wait for the next one.
+    ```
+    If we find the start point in Vglobal, that means it has been identified as an island_node, we drop this task directly and wait for the next one.
+## Some optimizations based on the raw algorithm:
+- *OP1*: We noticed that it'll generate lots of small islands in which there only exists one or two island_nodes except the hubs. This may lead to that the enhancement of the spatial locality will be limited, in the meanwhile, it'll increasing complexity of island management. So we add an `push_and_merge()` func to add islands into Lislands and check if it needs to be merged with other islands according to the minimum number of an island,i.e.Cmin.
+- *OP2*：
+
+
+We found that after the islands build process has finished, the total number of hubs plus island_nodes is smaller than the origin node numbers. Through data analysis, we found that there exists another type of nodes, it has only one neighbor and so as its neighbor. I think it's unavoidably so I do nothing about this.
