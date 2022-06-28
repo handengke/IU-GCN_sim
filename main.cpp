@@ -56,27 +56,27 @@ void readFile(string filename, vector<vector<int>>& matrix){
 
 int main(){
     
-    /*vector<vector<int>> m=\
+    vector<vector<int>> m=\
     {
-        {0,0,0,1,0,0,0,0,0,0},
-        {0,0,0,1,1,0,0,0,0,0},
-        {0,0,0,1,1,0,0,0,0,0},
-        {1,1,1,0,1,1,0,1,0,0},
         {0,1,1,1,0,0,0,0,0,0},
-        {0,0,0,1,0,0,0,0,0,0},
+        {1,0,0,1,1,0,0,0,0,0},
+        {1,0,0,1,1,0,0,0,0,0},
+        {1,1,1,0,1,1,0,1,0,0},
+        {0,1,1,1,0,1,0,0,0,0},
+        {0,0,0,1,1,0,0,0,0,0},
         {0,0,0,0,0,0,0,1,0,1},
         {0,0,0,1,0,0,1,0,1,1},
         {0,0,0,0,0,0,0,1,0,1},
         {0,0,0,0,0,0,1,1,1,0}
-    };*/
+    };
 
-    vector<vector<int>> adj_m;
-    string filename="./datasets/cora/cora_cites.txt";
-    readFile(filename,adj_m);
+    // vector<vector<int>> adj_m;
+    // string filename="./datasets/cora/cora_cites.txt";
+    // readFile(filename,adj_m);
 
     vector<node> nList;
-    build_nodeList(adj_m,nList);
-    // build_nodeList(m,nList);
+    // build_nodeList(adj_m,nList);
+    build_nodeList(m,nList);
     prtList(nList);
 
     cout<<endl;
@@ -87,7 +87,7 @@ int main(){
 
     //p1=3, THtmp=4 for toy example
     //p1=3, THtmp=10 for Cora
-    locator.detect_hub(3,10);
+    locator.detect_hub(3,4);
 
     cout<<endl;
     prtList(locator.nodeList);
@@ -96,7 +96,7 @@ int main(){
     cout<<endl;
 
     //th,cmax,p2
-    locator.TP_BFS(10,100,2);
+    locator.TP_BFS(4,3,2);
 
     locator.prtLislands();
 

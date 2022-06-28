@@ -13,12 +13,19 @@ We decided to add but not remove here.
     if(find(Vglobal.begin(),Vglobal.end(),cur_task.second)!=Vglobal.end()) continue;
     ```
     If we find the start point in Vglobal, that means it has been identified as an island_node, we drop this task directly and wait for the next one.
+- *Q4*: In raw algorithm line 17, if |Vlocal|>Cmax after appending current node into Vlocal and Vglobal, then break. It seems that judgement condition here doesn't conform the definition of Cmax, i.e. the max number of node in an island. I believe '>' should be replaced by '==' to satisfy the origin definiton of Cmax.
+
 ## Some optimizations based on the raw algorithm:
 - *OP1*: We noticed that it'll generate lots of small islands in which there only exists one or two island_nodes except the hubs. This may lead to that the enhancement of the spatial locality will be limited, in the meanwhile, it'll increasing complexity of island management. So we add an `push_and_merge()` func to add islands into Lislands and check if it needs to be merged with other islands according to the minimum number of an island,i.e.Cmin.
 - *OP2*：Apparently, organizing vertex in the form of islands can definately improve the spatial locality of island_nodes, however, there still exist two points worth thinking:
     - Which nodes are responsible for updating hubs?
     - What if a node in an island has edegs with other nodes in other different island?
 
-    To tackle these issues, we first propose a novel concept,i.e. the hub_island to update the hubs. Additionally we add a shell for every island. The terminology ‘shell’ we use here is corresponding to the second concern we put forward abobe. If an island was built with some edges 'disconnected' because of the limitation from Cmax, then we record the nodes which are supposed to be one of the island_nodes of this island but actually in other islands as shell_nodes for this island. In this way, in every GCN layer, each island has only communication with the nodes in the same island. **However, this will raise another thorny issue, i.e. how to synchronize these shell_nodes when they are updated by the islands they originally belong to.**(TODO)
+    To tackle these issues, （1)we first propose a novel concept,i.e. the hub_island to update the hubs. (2)Additionally we add a shell for every island. The terminology ‘shell’ we use here is corresponding to the second concern we put forward abobe. <u>If an island was built with some edges 'disconnected' because of the limitation from Cmax,or because some graph regions have benn visited by other PEs yet(corresponding to *breakFlag=true* and *discardFlag=true*, respectively), then we record the nodes which are supposed to be one of the island_nodes of this island but actually in other islands as shell_nodes for this island</u>. In this way, in every GCN layer, each island has only communication with the nodes in the same island. 
+    
+    **However, this will raise another thorny issue, i.e. how to synchronize these shell_nodes when they are updated by the islands they originally belong to.**(TODO)
+
+<font color="red">1. Since we cannot predict how many "small islands" will be merged to form a big island, what if the number of nodes in the big island becomes larger than the Cmax？
+2. Consider that some island_nodes in an island are regareded as shell_nodes of a small island, and they must be merged, then after the merge operation, there will be some nodes both in the island_nodes and shell_nodes. How to eliminate this kind of redundancy？</font>
 
 We found that after the islands build process has finished, the total number of hubs plus island_nodes is smaller than the origin node numbers. Through data analysis, we found that there exists another type of nodes, it has only one neighbor and so as its neighbor. I think it's unavoidably so I do nothing about this.

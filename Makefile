@@ -5,8 +5,8 @@ main.o: main.cpp Locator.h
 Locator.o: Locator.cpp Locator.h
 	g++ -c Locator.cpp
 clean:
-	rm *.o main run.txt
+	rm *.o main log.txt
 run:
-	./main>run.txt
+	./main>log.txt
 debug:
 	gdb ./main

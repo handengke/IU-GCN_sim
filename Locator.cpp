@@ -32,33 +32,45 @@ void island_locator::remove_vlocal_from_vglobal(vector<int> vlocal, vector<int>&
 void island_locator::push_and_merge(Island& island,int nodeNum){
     if(!Lislands.empty()){
         Island& nearest_island=Lislands.back();
-        if(nodeNum<=Cmin) // if current island is small
-        {
-            if(nearest_island.hub_list.front()==island.hub_list.front()){
-                for(auto n:island.island_nodes)
-                    nearest_island.island_nodes.push_back(n);
-                cout<<"this island needs to be merged with its previous island since it's small!"<<endl;
-            }
-            else{
-                Lislands.push_back(island);
-                cout<<"this island cannot be merged since it's the hub_list small island of this hub!"<<endl;
-            }                       
-        }
-        else //current island is not small,but we still have to check if its previous island is small and need to merge with is
-        {
-            if(nearest_island.island_nodes.size()<=Cmin){
+        if(!nearest_island.hub_list.empty()){
+            if(nodeNum<=Cmin) // if current island is small
+            {
                 if(nearest_island.hub_list.front()==island.hub_list.front()){
                     for(auto n:island.island_nodes)
                         nearest_island.island_nodes.push_back(n);
-                    cout<<"this island needs to be merged with its previous island since previous island is small!"<<endl;
+                    for(auto s:island.shell_nodes)
+                        nearest_island.shell_nodes.push_back(s);
+                    cout<<"this island needs to be merged with its previous island since it's small!"<<endl;
                 }
                 else{
-                    cout<<"this island dosen't need to be merged since its previous island is not small!"<<endl;
-                }  
+                    Lislands.push_back(island);
+                    cout<<"this island cannot be merged since it's the first small island of this hub!"<<endl;
+                }                       
             }
-            else Lislands.push_back(island);
+            else //current island is not small,but we still have to check if its previous island is small and need to merge with is
+            {
+                if(nearest_island.island_nodes.size()<=Cmin){
+                    if(nearest_island.hub_list.front()==island.hub_list.front()){
+                        for(auto n:island.island_nodes)
+                            nearest_island.island_nodes.push_back(n);
+                        for(auto s:island.shell_nodes)
+                            nearest_island.shell_nodes.push_back(s);
+                        cout<<"this island needs to be merged with its previous island since previous island is small!"<<endl;
+                    }
+                    else{
+                        Lislands.push_back(island);
+                        cout<<"this island dosen't need to be merged since its previous island is not small!"<<endl;
+                    }  
+                }
+                else Lislands.push_back(island);
+            }
+            cout<<"------------------------------"<<endl;
         }
-        cout<<"------------------------------"<<endl;
+        else
+        {
+            cout<<"the previous island is an hub_island and cannot be merged!"<<endl;
+            Lislands.push_back(island); 
+        } 
     }
     else
     {
@@ -70,8 +82,9 @@ void island_locator::push_and_merge(Island& island,int nodeNum){
 
 
 //build the hub_islands that are used to update hub nodes
-void island_locator::build_hubIslands(){
-    
+void island_locator::build_and_push_hubIslands(node& hub){
+    Island hub_island({},{hub.id},hub.adj_list);
+    Lislands.push_back(hub_island);
 }
 
 //print the final Lislands
@@ -81,6 +94,10 @@ void island_locator::prtLislands(){
     for(auto island:Lislands){
         auto hubs=island.hub_list;
         auto iNodes=island.island_nodes;
+        auto shells=island.shell_nodes;
+
+        
+        if(hubs.empty()) hubC++;
 
         cout<<"*********************************************"<<endl;
         cout<<"island "<<count++<<": "<<endl;
@@ -89,7 +106,6 @@ void island_locator::prtLislands(){
         for(auto h:hubs)
         {
             cout<<h<<" ";
-            hubC++;
         } 
         cout<<endl;
 
@@ -97,14 +113,20 @@ void island_locator::prtLislands(){
         for(auto i:iNodes)
         {
             cout<<i<<" ";
-            nodeC++;
+            if(!hubs.empty())
+                nodeC++;
         } 
+        cout<<endl;
+
+        cout<<"shell_nodes are: ";
+        for(auto s:shells)
+            cout<<s<<" ";
         cout<<endl;
 
         cout<<"*********************************************"<<endl;
     }
     cout<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"<<endl;
-    cout<<"total nodes number: "<<nodeC;
+    cout<<"total nodes number: "<<nodeC+hubC;
 }
 
 
@@ -124,6 +146,8 @@ void island_locator::detect_hub(int p1, int THtmp){
                 {
                     //if n0.degree>= THtmp, then it's recognized as a hub
                     hub_buffer.push(n0);
+                    //corresponding to OP1 in README
+                    build_and_push_hubIslands(n0);
                     cout<<"a hub is detected:"<<"node id="<<n0.id<<endl;
                 }                
             }
@@ -158,6 +182,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
             tasks.pop();
             vector<int> hlocal {cur_task.first};
             vector<int> Vlocal {};
+            vector<int> shells {};
 
             cout<<"processing task is {"<<cur_task.first<<", "<<cur_task.second<<"}"<<endl;
 
@@ -181,9 +206,21 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                 {
                     int node0_id=Vlocal[query];
                     node node0=nodeList[node0_id];
+
+                    //OP2:2
+                    vector<int> possible_shells {};
+
                     for(auto neighbor_id:node0.adj_list){
                         node n=nodeList[neighbor_id];
+
                         if(n.get_degree()<TH){
+                            //corresponding to OP2:2 in README
+                            if(breakFlag || discardFlag)
+                            {
+                                shells.push_back(neighbor_id);
+                                continue;
+                            }
+
                             if (find(Vlocal.begin(),Vlocal.end(),n.id)!=Vlocal.end())
                                 continue;
                             else if (find(Vglobal.begin(),Vglobal.end(),n.id)==Vglobal.end())
@@ -191,18 +228,42 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                 count+=1;
                                 Vlocal.push_back(n.id);
                                 Vglobal.push_back(n.id);
-                                if(Vlocal.size()>Cmax)
+                                
+                                //OP2:2
+                                possible_shells.insert(possible_shells.end(),n.adj_list.begin(),n.adj_list.end());
+
+                                //corresponding to Q4 in README
+                                if(Vlocal.size()==Cmax)
                                 {
                                     breakFlag=true; 
-                                    cout<<"Vlocal.size()>Cmax,so break!"<<endl;
-                                    break;
+                                    cout<<"Vlocal.size()=Cmax,so break!"<<endl;
+                                    //corresponding to OP2:2 in README
+                                    for(auto nn: n.adj_list)
+                                    {
+                                        if(find(Vlocal.begin(),Vlocal.end(),nn)==Vlocal.end() && find(hlocal.begin(),hlocal.end(),nn)==hlocal.end())
+                                            shells.push_back(nn);
+                                        else continue;
+                                    }
+                                    //break;
+                                    continue;
                                 } 
                             }
                             else{
                                 discardFlag=true;
+                                
+                                //corresponding to OP2:2 in README
+                                shells.push_back(n.id);
+
+                                for (auto s:possible_shells)
+                                {
+                                    if(find(Vlocal.begin(),Vlocal.end(),s)==Vlocal.end() && find(hlocal.begin(),hlocal.end(),s)==hlocal.end())
+                                        shells.push_back(s);
+                                    else continue;
+                                }
+
                                 //no need for remove, corresponding to Q2 in README.md
                                 //remove_vlocal_from_vglobal(Vlocal,Vglobal);
-                                break;
+                                continue;
                             }
                         }
                         else{
@@ -213,7 +274,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     }
                     query+=1;
                 }
-                Island new_island(hlocal,Vlocal);
+                Island new_island(hlocal,Vlocal,shells);
 
                 if (discardFlag)
                     cout<<"this task has been dropped since this region of graph have been visited by other PEs!(discardFlag=true)"<<endl;
@@ -225,9 +286,13 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                 for(auto h:new_island.hub_list){
                     cout<<h<<" ";
                 }
-                cout<<", and island_nodes are:";
+                cout<<", island_nodes are:";
                 for(auto v:new_island.island_nodes){
                     cout<<v<<" ";
+                }
+                cout<<", and shell_nodes are:";
+                for(auto s:new_island.shell_nodes){
+                    cout<<s<<" ";
                 }
                 cout<<endl;
                     

@@ -50,7 +50,7 @@ struct Island
     vector<int> shell_nodes={};
 
     Island(){};
-    Island(vector<int> h,vector<int> n):hub_list{h},island_nodes(n){};
+    Island(vector<int> h,vector<int> n,vector<int>s):hub_list{h},island_nodes(n),shell_nodes(s){};
 };
 
 
@@ -66,7 +66,7 @@ private:
     //hubs that have been used as central node to build hub_islands
     vector<int> Hlocal={};
     //the least number of nodes in an island
-    int Cmin=2;
+    int Cmin=1;
 
 public:
     //顶点列表
@@ -87,7 +87,7 @@ public:
     void TP_BFS(int TH,int Cmax,int p2);
 
     //检查某顶点是否已经被分类为hub_node或者island_node
-    bool if_already_classifed(node& destNd);
+    bool if_already_classifed(node&);
 
     //在遇到某顶点已被访问过时，remov vlocal from vglobal
     void remove_vlocal_from_vglobal(vector<int>,vector<int>&);
@@ -99,7 +99,7 @@ public:
     void add_shell(Island&);
 
     //构建hub_islands
-    void build_hubIslands();
+    void build_and_push_hubIslands(node&);
 
     //print the Lisaldns
     void prtLislands();

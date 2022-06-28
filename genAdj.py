@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import sys
  
 # 导入数据：分隔符为空格
 path='./datasets/cora/cora_content'
@@ -31,5 +32,5 @@ for i, j in zip(raw_data_cites[0], raw_data_cites[1]):
     y = map_dic[j]  # 替换论文编号为[0,2707]
     matrix[x][y] = matrix[y][x] = 1  # 有引用关系的样本点之间取1
 
-
+#将邻接矩阵写入文本文件
 np.savetxt('./datasets/cora/cora_cites.txt', np.c_[matrix],fmt='%d',delimiter='\t')
