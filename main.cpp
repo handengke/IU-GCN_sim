@@ -58,6 +58,7 @@ void readFile(string filename, vector<vector<int>>& matrix){
     }
 }
 
+#ifdef RUN_TOY
 void run_toy(){
     vector<vector<int>> m=\
     {
@@ -92,7 +93,7 @@ void run_toy(){
             Thtmp=locator.Decay(Thtmp);
 
         cout<<endl;
-        cout<<"0000000000000000000000000000"<<endl;
+        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
         cout<<"round "<<round<<",and the Thtmp is "<<Thtmp<<",the valid_count is "<<locator.valid_count()<<endl;
         cout<<endl;
 
@@ -113,10 +114,12 @@ void run_toy(){
         locator.remove_identified_nodes();
 
         cout<<"round "<<round++<<" finish"<<",and the Thtmp is "<<Thtmp<<",the valid_count is "<<locator.valid_count()<<endl;
-        cout<<"0000000000000000000000000000"<<endl;
+        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
     }
 }
+#endif
 
+#ifdef RUN_CORA
 void run_cora(){
     vector<vector<int>> adj_m;
     string filename="./datasets/cora/cora_cites.txt";
@@ -124,9 +127,6 @@ void run_cora(){
     
     vector<node> nList;
     build_nodeList(adj_m,nList);
-
-    prtList(nList);
-        cout<<endl;
 
     //实例化一个locator
     island_locator locator=island_locator(nList);
@@ -139,9 +139,9 @@ void run_cora(){
             Thtmp=locator.Decay(Thtmp);
 
         cout<<endl;
-        cout<<"0000000000000000000000000000"<<endl;
+        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
         cout<<"round "<<round++<<",and the Thtmp is "<<Thtmp<<",the valid_count is "<<locator.valid_count()<<endl;
-        cout<<"0000000000000000000000000000"<<endl;
+        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
         cout<<endl;
 
         //p1=3
@@ -160,6 +160,7 @@ void run_cora(){
         locator.remove_identified_nodes();
     }
 }
+#endif
 
 int main(){
     #ifdef RUN_TOY

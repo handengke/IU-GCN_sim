@@ -20,6 +20,7 @@ We decided to remove here, and not add. The raw algorithm in paper doesnot give 
 - *Q4*: In raw algorithm line 17, if |Vlocal|>Cmax after appending current node into Vlocal and Vglobal, then break. It seems that judgement condition here doesn't conform the definition of Cmax, i.e. the max number of node in an island. I believe '>' should be replaced by '==' to satisfy the origin definiton of Cmax.
 > This is true.
 - *Q5*: We noticed that when the start point of a task (a neighbor of a hub) has no other neighbors than its hub, then it will form an island by itself but not added into Vglobal. Thus, when another PE encounters this node, it maybe built a small island again.
+- *Q6*: We noticed that when a task{hub,start_point_neighbor} is fired, if the start point has been visited or it's a hub itself, then this hub may not belong to any one of the nodes,it will form a isolated island itself.
 
 ## Some optimizations based on the raw algorithm:
 - *OP1*: We noticed that it'll generate lots of small islands in which there only exists one or two island_nodes except the hubs. This may lead to that the enhancement of the spatial locality will be limited, in the meanwhile, it'll increasing complexity of island management. So we add an `push_and_merge()` func to add islands into Lislands and check if it needs to be merged with other islands according to the minimum number of an island,i.e.Cmin.

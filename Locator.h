@@ -59,7 +59,10 @@ class island_locator
 {
 private:
     //枢纽结点buffer
-    queue<node> hub_buffer={};
+    queue<int> hub_buffer={};
+
+    //there exists some isolated hubs that don't belong to any one of island
+    set<int> hub_list={};
     //task
     queue<pair<int,int>> tasks={};
     //nodes that have been visited

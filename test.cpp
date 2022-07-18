@@ -67,16 +67,23 @@ int main(){
     // }
     vector<int> a {1,2,3,4};
     vector<int> b {3,2,1,4};
-    Island newIsland(a,b);
-    for(auto e: newIsland.hub_list){
-        cout<<e<<" ";
-    }
-    cout<<endl;
-    for(auto e: newIsland.island_nodes){
-        cout<<e<<" ";
-    }
-    cout<<endl;    
-    
+    // Island newIsland(a,b);
+    // for(auto e: newIsland.hub_list){
+    //     cout<<e<<" ";
+    // }
+    // cout<<endl;
+    // for(auto e: newIsland.island_nodes){
+    //     cout<<e<<" ";
+    // }
+    // cout<<endl;    
+    a.pop_back();
+    for(auto e:a) cout<<e<<" ";
+    cout<<a.size()<<endl;
+
+    a.insert(a.begin(),2);
+
+    for(auto e:a) cout<<e<<" ";
+    cout<<a.size()<<endl;
     return 0;
 //omp.cc
     // int count=0;

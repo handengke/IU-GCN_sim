@@ -1,1 +1,1 @@
-#define RUN_TOY 
+#define RUN_CORA 
