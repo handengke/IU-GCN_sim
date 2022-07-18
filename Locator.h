@@ -2,6 +2,7 @@
 #include<string>
 #include<queue>
 #include<vector>
+#include<set>
 #include<utility>
 #include<algorithm>
 
@@ -31,7 +32,7 @@ struct node
 {
     int id=-1;  //vertex id
     bool valid=true;
-    vector<int> adj_list={}; //邻接列表，存访邻居顶点的index
+    vector<int> adj_list={}; //邻接列表，存放邻居顶点的index
     vector<int> features={};  //特征向量
 
     node(){}; //默认构造函数，用于不初始化实例化结构体
@@ -47,10 +48,10 @@ struct Island
 {
     vector<int> hub_list={};
     vector<int> island_nodes={};
-    vector<int> shell_nodes={};
+    // vector<int> shell_nodes={};
 
     Island(){};
-    Island(vector<int> h,vector<int> n,vector<int>s):hub_list{h},island_nodes(n),shell_nodes(s){};
+    Island(vector<int> h,vector<int> n):hub_list{h},island_nodes(n){};
 };
 
 
@@ -63,8 +64,6 @@ private:
     queue<pair<int,int>> tasks={};
     //nodes that have been visited
     vector<int> Vglobal={};
-    //hubs that have been used as central node to build hub_islands
-    vector<int> Hlocal={};
     //the least number of nodes in an island
     int Cmin=1;
 
@@ -99,9 +98,17 @@ public:
     void add_shell(Island&);
 
     //构建hub_islands
-    void build_and_push_hubIslands(node&);
+    // void build_and_push_hubIslands(node&);
 
     //print the Lisaldns
     void prtLislands();
 
+    //to decline the threshold to recognize a hub for the next round
+    int Decay(int);
+
+    //to remove nodes that have been identified as hub or island_nodes from nodeList
+    void remove_identified_nodes();
+
+    //to count how many nodes have been identified as hub or island_node
+    int valid_count();
 };

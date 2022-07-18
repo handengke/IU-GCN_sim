@@ -2,8 +2,8 @@
 #include<vector>
 #include<string>
 #include<bits/stdc++.h>
-#include"Locator.h"
-
+#include "Locator.h"
+#include "autodef.h"
 using namespace std;
 
 //build the initial nodeList
@@ -23,10 +23,14 @@ void build_nodeList(vector<vector<int>> adjm,vector<node>& ndList)
 //print the node_list
 void prtList(vector<node>& l){
     for(auto n:l){
-        cout<<"node id: "<<n.id<<endl;
-        cout<<"its adjList: ";
-        for(auto e:n.adj_list) cout<<e<<" ";
-        cout<<endl;
+        if(n.valid)
+        {
+            cout<<"node id: "<<n.id<<endl;
+            cout<<"its adjList: ";
+            for(auto e:n.adj_list) cout<<e<<" ";
+            cout<<endl;
+        }
+        else continue;
     }
     cout<<endl;
 }
@@ -54,8 +58,7 @@ void readFile(string filename, vector<vector<int>>& matrix){
     }
 }
 
-int main(){
-    
+void run_toy(){
     vector<vector<int>> m=\
     {
         {0,1,1,1,0,0,0,0,0,0},
@@ -70,14 +73,10 @@ int main(){
         {0,0,0,0,0,0,1,1,1,0}
     };
 
-    // vector<vector<int>> adj_m;
-    // string filename="./datasets/cora/cora_cites.txt";
-    // readFile(filename,adj_m);
 
     vector<node> nList;
-    // build_nodeList(adj_m,nList);
     build_nodeList(m,nList);
-    prtList(nList);
+    //prtList(nList);
 
     cout<<endl;
 
@@ -85,21 +84,91 @@ int main(){
     island_locator locator=island_locator(nList);
     prtList(locator.nodeList);
 
-    //p1=3, THtmp=4 for toy example
-    //p1=3, THtmp=10 for Cora
-    locator.detect_hub(3,4);
+    int round=1;
+    int Thtmp=4;
 
-    cout<<endl;
+    while(locator.valid_count()!=0){
+        if(round!=1)
+            Thtmp=locator.Decay(Thtmp);
+
+        cout<<endl;
+        cout<<"0000000000000000000000000000"<<endl;
+        cout<<"round "<<round<<",and the Thtmp is "<<Thtmp<<",the valid_count is "<<locator.valid_count()<<endl;
+        cout<<endl;
+
+        //p1=3
+        locator.detect_hub(3,Thtmp);
+
+        cout<<endl;
+        prtList(locator.nodeList);
+
+        locator.task_assign();
+        cout<<endl;
+
+        //th,cmax,p2
+        locator.TP_BFS(Thtmp,4,2);
+
+        locator.prtLislands();
+
+        locator.remove_identified_nodes();
+
+        cout<<"round "<<round++<<" finish"<<",and the Thtmp is "<<Thtmp<<",the valid_count is "<<locator.valid_count()<<endl;
+        cout<<"0000000000000000000000000000"<<endl;
+    }
+}
+
+void run_cora(){
+    vector<vector<int>> adj_m;
+    string filename="./datasets/cora/cora_cites.txt";
+    readFile(filename,adj_m);
+    
+    vector<node> nList;
+    build_nodeList(adj_m,nList);
+
+    prtList(nList);
+        cout<<endl;
+
+    //实例化一个locator
+    island_locator locator=island_locator(nList);
     prtList(locator.nodeList);
+    int round=1;
+    int Thtmp=10;
 
-    locator.task_assign();
-    cout<<endl;
+    while(locator.valid_count()!=0){
+        if(round!=1)
+            Thtmp=locator.Decay(Thtmp);
 
-    //th,cmax,p2
-    locator.TP_BFS(4,3,2);
+        cout<<endl;
+        cout<<"0000000000000000000000000000"<<endl;
+        cout<<"round "<<round++<<",and the Thtmp is "<<Thtmp<<",the valid_count is "<<locator.valid_count()<<endl;
+        cout<<"0000000000000000000000000000"<<endl;
+        cout<<endl;
 
-    locator.prtLislands();
+        //p1=3
+        locator.detect_hub(3,Thtmp);
 
+        cout<<endl;
+        prtList(locator.nodeList);
+
+        locator.task_assign();
+        cout<<endl;
+
+        //th,cmax,p2
+        locator.TP_BFS(Thtmp,1000,2);
+
+        locator.prtLislands();
+        locator.remove_identified_nodes();
+    }
+}
+
+int main(){
+    #ifdef RUN_TOY
+        run_toy();
+    #endif
+
+    #ifdef RUN_CORA
+        run_cora();
+    #endif
     // node node0=node();
     // node0.id=0;
 

@@ -1,3 +1,4 @@
+
 node id: 0
 its adjList: 1 2 3 
 node id: 1
@@ -20,26 +21,8 @@ node id: 9
 its adjList: 6 7 8 
 
 
-node id: 0
-its adjList: 1 2 3 
-node id: 1
-its adjList: 0 3 4 
-node id: 2
-its adjList: 0 3 4 
-node id: 3
-its adjList: 0 1 2 4 5 7 
-node id: 4
-its adjList: 1 2 3 5 
-node id: 5
-its adjList: 3 4 
-node id: 6
-its adjList: 7 9 
-node id: 7
-its adjList: 3 6 8 9 
-node id: 8
-its adjList: 7 9 
-node id: 9
-its adjList: 6 7 8 
+0000000000000000000000000000
+round 1,and the Thtmp is 4,the valid_count is 10
 
 a hub is detected:node id=3
 a hub is detected:node id=4
@@ -82,11 +65,10 @@ a task is generated:(7,8)
 a task is generated:(7,9)
 
 processing task is {3, 0}
-Vlocal.size()=Cmax,so break!
 this task finished normally!(discardFlag=false)
 An island is built！
-hub_nodes are:3 , island_nodes are:0 1 2 , and shell_nodes are:4 
-the previous island is an hub_island and cannot be merged!
+hub_nodes are:3 4 , island_nodes are:0 1 2 
+------------------------------
 ------------------------------
 processing task is {3, 1}
 this task is dropped because the BFS start point has been visited yet!
@@ -97,8 +79,8 @@ this task has benn dropped since node0 is a hub too!
 processing task is {3, 5}
 this task finished normally!(discardFlag=false)
 An island is built！
-hub_nodes are:3 4 , island_nodes are:5 , and shell_nodes are:
-this island needs to be merged with its previous island since it's small!
+hub_nodes are:3 4 , island_nodes are:5 
+this island needs to be merged with its previous island with the same hub since it's small!
 ------------------------------
 ------------------------------
 processing task is {3, 7}
@@ -110,20 +92,13 @@ this task is dropped because the BFS start point has been visited yet!
 processing task is {4, 3}
 this task has benn dropped since node0 is a hub too!
 processing task is {4, 5}
-this task finished normally!(discardFlag=false)
-An island is built！
-hub_nodes are:4 3 , island_nodes are:5 , and shell_nodes are:
-this island cannot be merged since it's the first small island of this hub!
-------------------------------
-------------------------------
+this task is dropped because the BFS start point has been visited yet!
 processing task is {7, 3}
 this task has benn dropped since node0 is a hub too!
 processing task is {7, 6}
-Vlocal.size()=Cmax,so break!
 this task finished normally!(discardFlag=false)
 An island is built！
-hub_nodes are:7 , island_nodes are:6 9 8 , and shell_nodes are:
-this island dosen't need to be merged since its previous island is not small!
+hub_nodes are:7 , island_nodes are:6 9 8 
 ------------------------------
 ------------------------------
 processing task is {7, 8}
@@ -132,39 +107,17 @@ processing task is {7, 9}
 this task is dropped because the BFS start point has been visited yet!
 *********************************************
 island 1: 
-hub_nodes are: 
-island_nodes are: 3 
-shell_nodes are: 0 1 2 4 5 7 
+hub_nodes are: 3 4 
+island_nodes are: 0 1 2 5 
 *********************************************
 *********************************************
 island 2: 
-hub_nodes are: 
-island_nodes are: 4 
-shell_nodes are: 1 2 3 5 
-*********************************************
-*********************************************
-island 3: 
-hub_nodes are: 
-island_nodes are: 7 
-shell_nodes are: 3 6 8 9 
-*********************************************
-*********************************************
-island 4: 
-hub_nodes are: 3 
-island_nodes are: 0 1 2 5 
-shell_nodes are: 4 
-*********************************************
-*********************************************
-island 5: 
-hub_nodes are: 4 3 
-island_nodes are: 5 
-shell_nodes are: 
-*********************************************
-*********************************************
-island 6: 
 hub_nodes are: 7 
 island_nodes are: 6 9 8 
-shell_nodes are: 
 *********************************************
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-total nodes number: 11
+total nodes number: 10
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+round 1 finish,and the Thtmp is 4,the valid_count is 0
+0000000000000000000000000000
