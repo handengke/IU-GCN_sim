@@ -35,9 +35,16 @@ We decided to remove here, and not add. The raw algorithm in paper doesnot give 
     ~~**However, this will raise another thorny issue, i.e. how to synchronize these shell_nodes when they are updated by the islands they originally belong to.**(TODO)~~
 > It's no need to do this, since there exists several rounds of islandization, when we do several islandization rounds, the final islands will strictly adhere to the raw defination of 'island'.So we remove this 'shell' concept here at 22/07/18.
 
-
+## Other thoughts(TODO)
 1. Since we cannot predict how many "small islands" will be merged to form a big island, what if the number of nodes in the big island becomes larger than the Cmax？
 
 2. Consider that some island_nodes in an island are regareded as shell_nodes of a small island, and they must be merged, then after the merge operation, there will be some nodes both in the island_nodes and shell_nodes. How to eliminate this kind of redundancy？
 
 3. We found that after the islands build process has finished, the total number of hubs plus island_nodes is smaller than the origin node numbers. Through data analysis, we found that there exists another type of nodes, it has only one neighbor and so as its neighbor. I think it's unavoidably so I do nothing about this.
+
+## Workflow
+It's easy to start the algorithm simulation:
+```Shell
+./run.sh CORA
+```
+The results got will be saved into run_log.txt, including the detail info about every generated island and some statistical info.

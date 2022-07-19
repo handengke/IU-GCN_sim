@@ -1,3 +1,8 @@
+/*
+author: Dengke Han
+data: 2022/06/10
+*/
+
 #include"Locator.h"
 #include<cmath>
 
@@ -160,7 +165,8 @@ void island_locator::prtLislands(){
         cout<<"*********************************************"<<endl;
     }
     cout<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"<<endl;
-    cout<<"total nodes number: "<<hub_list.size()+n_counted.size()<<endl;
+    cout<<"total nodes number:  "<<hub_list.size()+n_counted.size()<<endl;
+    cout<<"in-island nodes number:  "<<h_counted.size()+n_counted.size()<<endl;
     cout<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"<<endl;
     cout<<endl;
 }
