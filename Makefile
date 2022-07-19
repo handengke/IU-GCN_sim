@@ -1,12 +1,12 @@
 main: main.o Locator.o
 	g++ -g -o main main.o Locator.o
-main.o: main.cpp Locator.h
-	g++ -c main.cpp
-Locator.o: Locator.cpp Locator.h
-	g++ -c Locator.cpp
+main.o: ./src/main.cpp ./src/Locator.h
+	g++ -c ./src/main.cpp
+Locator.o: ./src/Locator.cpp ./src/Locator.h
+	g++ -c ./src/Locator.cpp
 clean:
-	rm *.o main log.txt
+	rm *.o main run_log.txt
 run:
-	./main>log.txt
+	./main>run_log.txt
 debug:
 	gdb ./main
