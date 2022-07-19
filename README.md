@@ -9,7 +9,7 @@
   - We remove Vlocal from Vglobal to indicate that this region will be visited by another PE.
   - If we do them both, then we'll find that there exists some nodes which are in Lislands but not in Vglobal, it's obviously not right.  
 
-We decided to remove here, and not add. The raw algorithm in paper doesnot give a check here so leads to a wired situation that there exists some nodes which have been identified as island_nodes of an island but not in Vglobal for current round.
+We decided to remove here, and not add. The raw algorithm in paper does not give a check here so leads to a weird situation that there exists some nodes which have been identified as island_nodes of an island but not in Vglobal for current round.
 > This is true.
 - *Q3*: The raw algorithm use hub's neighbor as the start point of BFS, however, it only checks if the neighbor's neighbor is in Vglobal, but there is no operation performed here to check if the start point itself has been visited, obviously, if yes, then this task will be thoroughly dropped. So we add the flowing codes:
     ```c++

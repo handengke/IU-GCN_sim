@@ -275,7 +275,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                 //     continue;
                                 // }
 
-                            if (find(Vlocal.begin(),Vlocal.end(),n.id)!=Vlocal.end())
+                                if (find(Vlocal.begin(),Vlocal.end(),n.id)!=Vlocal.end())
                                     continue;
                                 else if (find(Vglobal.begin(),Vglobal.end(),n.id)==Vglobal.end())
                                 {
@@ -317,7 +317,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
 
                                     //no need for remove, corresponding to Q2 in README.md
                                     remove_vlocal_from_vglobal(Vlocal,Vglobal);
-                                    continue;
+                                    break;
                                 }
                             }
                             else{
@@ -331,40 +331,43 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     query+=1;
                 }
                 
-                if (discardFlag)
+                if (discardFlag){//drop this task and waits for the next
                     cout<<"this task has been dropped since this region of graph have been visited by other PEs!(discardFlag=true)"<<endl;
-                else
+                    continue;
+                }
+                else{ 
                     cout<<"this task finished normally!(discardFlag=false)"<<endl;
 
-                Island new_island(hlocal,Vlocal);
-                
-                //corresponding to Q5 in READEME.md
-                if(Vlocal.size()==1) Vglobal.push_back(Vlocal.front());
-
-                cout<<"An island is built！"<<endl;
-                cout<<"hub_nodes are:";
-                for(auto h:new_island.hub_list){
-                    cout<<h<<" ";
-                }
-                cout<<", island_nodes are:";
-                for(auto v:new_island.island_nodes){
-                    cout<<v<<" ";
-                }
-                // cout<<", and shell_nodes are:";
-                // for(auto s:new_island.shell_nodes){
-                //     cout<<s<<" ";
-                // }
-                cout<<endl;
+                    Island new_island(hlocal,Vlocal);
                     
-                //push new island into Lisland, and check if it's too small so that should be merged
-                // or should be merged with previous small island
-                //corresponding to OP1 in README.md
-                push_and_merge(new_island,query);
-                // Lislands.push_back(new_island);
-                cout<<"------------------------------"<<endl;
+                    //corresponding to Q5 in READEME.md
+                    if(Vlocal.size()==1) Vglobal.push_back(Vlocal.front());
+
+                    cout<<"An island is built！"<<endl;
+                    cout<<"hub_nodes are:";
+                    for(auto h:new_island.hub_list){
+                        cout<<h<<" ";
+                    }
+                    cout<<", island_nodes are:";
+                    for(auto v:new_island.island_nodes){
+                        cout<<v<<" ";
+                    }
+                    // cout<<", and shell_nodes are:";
+                    // for(auto s:new_island.shell_nodes){
+                    //     cout<<s<<" ";
+                    // }
+                    cout<<endl;
+                        
+                    //push new island into Lisland, and check if it's too small so that should be merged
+                    // or should be merged with previous small island
+                    //corresponding to OP1 in README.md
+                    push_and_merge(new_island,query);
+                    // Lislands.push_back(new_island);
+                    cout<<"------------------------------"<<endl;
+                }
             }
             else 
-            {
+            { //drop this task
                 cout<<"this task has benn dropped since node0 is a hub too!"<<endl;
                 continue;
             }
