@@ -1,6 +1,5 @@
 /*
-author: Dengke Han
-data: 2022/06/10
+Created by Dengke Han, at 2022/06/10
 */
 
 #include<iostream>
@@ -10,6 +9,8 @@ data: 2022/06/10
 #include<set>
 #include<utility>
 #include<algorithm>
+#include<string>
+#include<fstream>
 
 using namespace std;
 
@@ -57,8 +58,18 @@ struct Island
 
     Island(){};
     Island(vector<int> h,vector<int> n):hub_list{h},island_nodes(n){};
+    //get the number of island_nodes of an island, notice that this size does not include hubs
+    int get_island_size(){
+        return island_nodes.size();
+    };
 };
 
+//inter-hub info which should be sent to island_collector
+struct InterHub_edge
+{
+    int hub_id_s=-1;
+    int hub_id_d=-1;
+};
 
 class island_locator
 {
@@ -72,8 +83,6 @@ private:
     queue<pair<int,int>> tasks={};
     //nodes that have been visited
     vector<int> Vglobal={};
-    //the least number of nodes in an island
-    int Cmin=1;
 
 public:
     //顶点列表
@@ -94,22 +103,24 @@ public:
     void TP_BFS(int TH,int Cmax,int p2);
 
     //检查某顶点是否已经被分类为hub_node或者island_node
-    bool if_already_classifed(node&);
+    bool if_already_identified(node&);
 
     //在遇到某顶点已被访问过时，remov vlocal from vglobal
     void remove_vlocal_from_vglobal(vector<int>,vector<int>&);
     
     // 将初步生成的island放入Lislands，并合并hub周围单个岛顶点的small island
-    void push_and_merge(Island&,int);
+    void push_and_merge(Island&,int,int);
 
     //为island添加shell
-    void add_shell(Island&);
+    // void add_shell(Island&);
 
     //构建hub_islands
     // void build_and_push_hubIslands(node&);
 
     //print the Lisaldns
     void prtLislands();
+    //save islands to Lislands.txt for statistic
+    void saveLislands();
 
     //to decline the threshold to recognize a hub for the next round
     int Decay(int);
@@ -119,4 +130,7 @@ public:
 
     //to count how many nodes have been identified as hub or island_node
     int valid_count();
+
+    //to send inter-hub connection info to island_collector
+   // InterHub_edge send_hub_connection(){};
 };

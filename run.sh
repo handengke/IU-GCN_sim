@@ -3,15 +3,27 @@
 echo "" > ./src/autodef.h
 echo "#define RUN_$1 " > ./src/autodef.h
 
-echo "Generating adjacent matrix from origin dataset."
-#python3 ./genAdj.py
-echo "Complete!"
+dataSet_name=$1
+echo "Generating adjacent matrix for ${dataSet_name,,}!"
+python3 ./src/genAdj.py ${dataSet_name,,}
+echo "Generation Complete!"
 
 echo "Compiling C++ source code!"
-make clean
+exefile="./build/main"
+if [ -f "$exefile" ];then
+    make clean
+fi
 make
-echo "Complete!"
+echo "Compilation Complete!"
 
 echo "Running!"
-./main>run_log.txt
-echo "Success!"
+islandfile="./build/Lislands.txt"
+if [ ! -f "$islandfile" ];then
+    touch ./build/Lislands.txt
+fi
+./build/main>./build/run_log.txt
+echo "Run Success!"
+
+echo "Analyzing!"
+python3 ./src/statistic.py ${dataSet_name,,}
+echo "Finish!"

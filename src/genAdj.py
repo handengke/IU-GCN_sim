@@ -1,6 +1,5 @@
 '''
-author: Dengke Han
-date: 2022/06/18
+ Created by Dengke Han, at 2022/06/18
 '''
 
 import numpy as np
@@ -13,15 +12,15 @@ args=sys.argv
 dataSet_name=args[1]
 
 #the source path of the dataset
-path="./{name}".format(name=dataSet_name)
+dpath="./datasets/{name}".format(name=dataSet_name)
 
-print(path)
+print(dpath)
 
 #read origin dataset
-data_cites=pd.read_csv('{name}/{name}.cites'.format(name=dataSet_name),sep='\t',header=None)
+data_cites=pd.read_csv('{path}/{name}.cites'.format(path=dpath,name=dataSet_name,),sep='\t',header=None)
 print(data_cites.shape)
 
-data_content=pd.read_csv('{name}/{name}.content'.format(name=dataSet_name),sep='\t',header=None)
+data_content=pd.read_csv('{path}/{name}.content'.format(path=dpath,name=dataSet_name),sep='\t',header=None)
 print(data_content.shape)
 
 #for cora
@@ -68,4 +67,4 @@ elif dataSet_name=='citeseer':
     print(adjm)
 
 #save the adjm into an txt file so that c++ source code can read and process it 
-np.savetxt('./{name}/{name}_cites.txt'.format(name=dataSet_name), np.c_[adjm],fmt='%d',delimiter='\t')
+np.savetxt('{path}/{name}_cites.txt'.format(path=dpath,name=dataSet_name), np.c_[adjm],fmt='%d',delimiter='\t')

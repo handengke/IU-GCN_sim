@@ -5,6 +5,8 @@
 #include<thread>
 #include<bits/stdc++.h>
 #include<sstream>
+#include<map>
+#include<utility>
 using namespace std;
 
 void test(int& count){
@@ -67,6 +69,16 @@ int main(){
     // }
     vector<int> a {1,2,3,4};
     vector<int> b {3,2,1,4};
+    map<int,int> mymap;
+    for(int i=0;i<a.size();i++)
+    {
+        mymap.insert(pair<int,int>(a[i],b[i]));
+    }
+
+    for(int i=0;i<a.size();i++)
+    {
+        cout<<"b"<<i<<" is: "<<b[i]<<","<<"a"<<i<<" is: "<<mymap[b[i]]<<endl;
+    }
     // Island newIsland(a,b);
     // for(auto e: newIsland.hub_list){
     //     cout<<e<<" ";

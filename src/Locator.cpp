@@ -1,6 +1,5 @@
 /*
-author: Dengke Han
-data: 2022/06/10
+Created by Dengke Han, at 2022/06/10
 */
 
 #include"Locator.h"
@@ -42,7 +41,7 @@ int island_locator::valid_count(){
 }
 
 //to check if a node in nodeList has been recognized as a hub or a islandNode
-bool island_locator::if_already_classifed(node& destNd){
+bool island_locator::if_already_identified(node& destNd){
     for(auto p: Lislands){
         vector<int>& hub_nodes=p.hub_list;
         vector<int>& island_nodes=p.island_nodes;
@@ -70,51 +69,25 @@ void island_locator::remove_vlocal_from_vglobal(vector<int> vlocal, vector<int>&
 //@param island is the input island
 //@param nodeNum is the number of island_nodes of this island, represented by qeury(=count)
 //@output none, modify Lisland in place
-void island_locator::push_and_merge(Island& island,int nodeNum){
+void island_locator::push_and_merge(Island& island,int nodeNum,int cur_cmax){
     if(!Lislands.empty()){
         Island& nearest_island=Lislands.back();
-        // if(!nearest_island.hub_list.empty()){
-            if(nodeNum<=Cmin) // if current island is small
-            {
-                if(nearest_island.hub_list.front()==island.hub_list.front()){
-                    for(auto n:island.island_nodes)
-                        nearest_island.island_nodes.push_back(n);
-                    // for(auto s:island.shell_nodes)
-                    //     nearest_island.shell_nodes.push_back(s);
-                    cout<<"this island needs to be merged with its previous island with the same hub since it's small!"<<endl;
-                }
-                else{
-                    Lislands.push_back(island);
-                    cout<<"this island cannot be merged since it's the first small island of this hub!"<<endl;
-                }                       
+        if(nearest_island.get_island_size()+nodeNum<cur_cmax){
+            for(auto n:island.island_nodes)
+                nearest_island.island_nodes.push_back(n);
+            // for(auto s:island.shell_nodes)
+            //     nearest_island.shell_nodes.push_back(s);
+            for(auto h:island.hub_list){
+                if(find(nearest_island.hub_list.begin(),nearest_island.hub_list.end(),h)==nearest_island.hub_list.end())
+                    nearest_island.hub_list.push_back(h);
             }
-            else //current island is not small,but we still have to check if its previous island is small and need to merge with it
-            {
-                if(nearest_island.island_nodes.size()<=Cmin){
-                    if(nearest_island.hub_list.front()==island.hub_list.front()){
-                        for(auto n:island.island_nodes)
-                            nearest_island.island_nodes.push_back(n);
-                        // for(auto s:island.shell_nodes)
-                        //     nearest_island.shell_nodes.push_back(s);
-                        cout<<"this island needs to be merged with its previous island since previous island with the same hub is small!"<<endl;
-                    }
-                    else{
-                        Lislands.push_back(island);
-                        cout<<"this island dosen't need to be merged with its previous island since it's not small!"<<endl;
-                    }  
-                }
-                else Lislands.push_back(island);
-            }
-            cout<<"------------------------------"<<endl;
-        // }
-        // else
-        // {
-        //     cout<<"the previous island is an hub_island and cannot be merged!"<<endl;
-        //     Lislands.push_back(island); 
-        // } 
-    }
-    else
-    {
+            cout<<"this island needs to be merged with its previous island since it's small or its previous one is small!"<<endl;                
+        }else{
+            cout<<"cannot be merged."<<endl;
+            Lislands.push_back(island);
+        }
+        cout<<"------------------------------"<<endl;
+    }else{
         //if Lisalnds is empty,push directly
         cout<<"------------------------------"<<endl;
         Lislands.push_back(island);        
@@ -171,6 +144,25 @@ void island_locator::prtLislands(){
     cout<<endl;
 }
 
+//to output Lislands into Lisland.txt for statistic
+void island_locator::saveLislands(){
+    string filepath="Lislands.txt";
+
+    ofstream out(filepath);
+    streambuf* oldPoint=cout.rdbuf(out.rdbuf());
+    //redirect cout
+    cout.rdbuf(out.rdbuf());//实现cout的重定向
+
+    for(auto island:Lislands){
+        auto hubs=island.hub_list;
+        auto iNodes=island.island_nodes;
+        for(auto h:hubs)
+            cout<<h<<" ";
+        for(auto i:iNodes)
+            cout<<i<<" ";
+    }
+    cout.rdbuf(oldPoint);
+}
 
 //detect hub_node
 //@param p1 is the parallelism of hub_dector
@@ -184,12 +176,12 @@ void island_locator::detect_hub(int p1, int THtmp){
             if(n0.valid) //that means it's not removed in last round, i.e. not identified as hub or island_node yet
             {
             //pop n0 from nodeList
-                if(!if_already_classifed(n0) && n0.get_degree()>=THtmp)
+                if(!if_already_identified(n0) && n0.get_degree()>=THtmp)
                 {
                     //if n0.degree>= THtmp, then it's recognized as a hub
                     hub_buffer.push(n0.id);
                     hub_list.insert(n0.id);
-                    //corresponding to OP1 in README
+                    //corresponding to Q7 in README
                     // build_and_push_hubIslands(n0);
                     cout<<"a hub is detected:"<<"node id="<<n0.id<<endl;
                 }                
@@ -238,18 +230,18 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
             //corresponding to Q3 in READE.md
             if(find(Vglobal.begin(),Vglobal.end(),cur_task.second)!=Vglobal.end())
             {
-                cout<<"this task is dropped because the BFS start point has been visited yet!"<<endl;
+                cout<<"this task is dropped because a0(the BFS start point) has been visited yet!"<<endl;
                 continue;
             } 
 
             //query track of the number of nodes whose neighbors have been visited totally
             //count track of the number of nodes that have been visited by any of the PEs
             int query=0,count=1;
-
+            node& a0=nodeList[cur_task.second];
             //if a0 is not a hub,then put it in Vlocal,otherwise, drop this task and forward this 
             //inter-hub connection information to Island Collector
-            if(nodeList[cur_task.second].get_degree()<TH){
-                Vlocal.push_back(cur_task.second);
+            if(a0.get_degree()<TH){
+                Vlocal.push_back(a0.id);
 
                 bool breakFlag=false;  //when |Vlocal|==Cmax
                 bool discardFlag=false;  //when a neighbor of node0 is not in Vlocal but in Vglobal,drop this task
@@ -259,7 +251,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     int node0_id=Vlocal[query];
                     node node0=nodeList[node0_id];
 
-                    //OP2:2
+                    //Q8:2
                     // vector<int> possible_shells {};
 
                     for(auto neighbor_id:node0.adj_list){
@@ -268,7 +260,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                         if(n.valid)
                         {
                             if(n.get_degree()<TH){
-                                //corresponding to OP2:2 in README
+                                //corresponding to Q8:2 in README
                                 // if(breakFlag || discardFlag)
                                 // {
                                 //     shells.push_back(neighbor_id);
@@ -283,7 +275,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                     Vlocal.push_back(n.id);
                                     Vglobal.push_back(n.id);
                                     
-                                    //OP2:2
+                                    //Q8:2
                                     // possible_shells.insert(possible_shells.end(),n.adj_list.begin(),n.adj_list.end());
 
                                     //corresponding to Q4 in README
@@ -291,21 +283,20 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                     {
                                         breakFlag=true; 
                                         cout<<"Vlocal.size()=Cmax,so break!"<<endl;
-                                        //corresponding to OP2:2 in README
+                                        //corresponding to Q8:2 in README
                                         // for(auto nn: n.adj_list)
                                         // {
                                         //     if(find(Vlocal.begin(),Vlocal.end(),nn)==Vlocal.end() && find(hlocal.begin(),hlocal.end(),nn)==hlocal.end())
                                         //         shells.push_back(nn);
                                         //     else continue;
                                         // }
-                                        //break;
-                                        continue;
+                                        break;
                                     } 
                                 }
                                 else{
                                     discardFlag=true;
                                     
-                                    //corresponding to OP2:2 in README
+                                    //corresponding to Q8:2 in README
                                     // shells.push_back(n.id);
 
                                     // for (auto s:possible_shells)
@@ -315,7 +306,7 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                                     //     else continue;
                                     // }
 
-                                    //no need for remove, corresponding to Q2 in README.md
+                                    //corresponding to Q2 in README.md
                                     remove_vlocal_from_vglobal(Vlocal,Vglobal);
                                     break;
                                 }
@@ -360,15 +351,16 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                         
                     //push new island into Lisland, and check if it's too small so that should be merged
                     // or should be merged with previous small island
-                    //corresponding to OP1 in README.md
-                    push_and_merge(new_island,query);
-                    // Lislands.push_back(new_island);
+                    //corresponding to Q7 in README.md
+                    push_and_merge(new_island,query,Cmax);
+                    //Lislands.push_back(new_island);
                     cout<<"------------------------------"<<endl;
                 }
             }
             else 
             { //drop this task
-                cout<<"this task has benn dropped since node0 is a hub too!"<<endl;
+                cout<<"this task has benn dropped since a0(the start point of BFS) is a hub too!"<<endl;
+                //send_hub_connection();
                 continue;
             }
     }

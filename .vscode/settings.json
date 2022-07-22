@@ -6,6 +6,8 @@
         "deque": "cpp",
         "unordered_map": "cpp",
         "initializer_list": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "string": "cpp",
+        "queue": "cpp"
     }
 }

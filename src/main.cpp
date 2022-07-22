@@ -1,6 +1,5 @@
 /*
-author: Dengke Han
-data: 2022/06/10
+Created by Dengke Han, at 2022/06/10
 */
 
 #include<iostream>
@@ -159,11 +158,12 @@ void run_cora(){
         cout<<endl;
 
         //th,cmax,p2
-        locator.TP_BFS(Thtmp,1000,2);
+        locator.TP_BFS(Thtmp,200,2);
 
         locator.prtLislands();
         locator.remove_identified_nodes();
     }
+    locator.saveLislands();
 }
 #endif
 
