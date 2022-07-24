@@ -146,12 +146,12 @@ void island_locator::prtLislands(){
 
 //to output Lislands into Lisland.txt for statistic
 void island_locator::saveLislands(){
-    string filepath="Lislands.txt";
+    string filepath="./build/Lislands.txt";
 
     ofstream out(filepath);
     streambuf* oldPoint=cout.rdbuf(out.rdbuf());
     //redirect cout
-    cout.rdbuf(out.rdbuf());//实现cout的重定向
+    cout.rdbuf(out.rdbuf());
 
     for(auto island:Lislands){
         auto hubs=island.hub_list;
@@ -352,8 +352,8 @@ void island_locator::TP_BFS(int TH,int Cmax,int p2){
                     //push new island into Lisland, and check if it's too small so that should be merged
                     // or should be merged with previous small island
                     //corresponding to Q7 in README.md
-                    push_and_merge(new_island,query,Cmax);
-                    //Lislands.push_back(new_island);
+                    //push_and_merge(new_island,query,Cmax);
+                    Lislands.push_back(new_island);
                     cout<<"------------------------------"<<endl;
                 }
             }

@@ -56,4 +56,6 @@ It's easy to start the algorithm simulation:
 ```
 The results got will be saved into ./build/run_log.txt, including the detail info about every generated island and some statistical info.
 Please note that all paths used in source codes are the path relative to your current path,i.e. the path where run.sh is in. If you wanna excute single source(eg, genAdj.py),please excute them in the top directory:
-> ./src/genAdj.py {dataset_name}
+```Shell
+./src/genAdj.py {dataset_name}
+```

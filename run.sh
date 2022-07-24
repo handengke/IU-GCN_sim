@@ -1,12 +1,14 @@
 #!/bin/bash
 
+name=$1
 echo "" > ./src/autodef.h
-echo "#define RUN_$1 " > ./src/autodef.h
+echo "#define RUN_${name^^} " > ./src/autodef.h
 
-dataSet_name=$1
-echo "Generating adjacent matrix for ${dataSet_name,,}!"
-python3 ./src/genAdj.py ${dataSet_name,,}
-echo "Generation Complete!"
+adj_m="./datasets/${name,,}/${name,,}_cites.txt"
+if [ ! -f "$adj_m" ];then
+    echo "Cannot find the adj matrix for $name!"
+    ./genAdj.sh $name
+fi
 
 echo "Compiling C++ source code!"
 exefile="./build/main"
@@ -25,5 +27,5 @@ fi
 echo "Run Success!"
 
 echo "Analyzing!"
-python3 ./src/statistic.py ${dataSet_name,,}
+python3 ./src/statistic.py ${name,,}
 echo "Finish!"

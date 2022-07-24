@@ -1,5 +1,7 @@
 '''
  Created by Dengke Han, at 2022/06/18
+ 
+ This file aims to generate adj matrix from origin dataset.
 '''
 
 import numpy as np

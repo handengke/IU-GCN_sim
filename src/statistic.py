@@ -1,5 +1,7 @@
 '''
  Created by Dengke Han, at 2022/07/22
+ 
+ This file aims to analyze the result islandization.
 '''
 
 import sys
