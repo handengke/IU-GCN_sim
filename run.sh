@@ -7,7 +7,7 @@ echo "#define RUN_${name^^} " > ./src/autodef.h
 adj_m="./datasets/${name,,}/${name,,}_cites.txt"
 if [ ! -f "$adj_m" ];then
     echo "Cannot find the adj matrix for $name!"
-    ./genAdj.sh $name
+    ./genSource.sh -name $name -genadjm True
 fi
 
 echo "Compiling C++ source code!"

@@ -1,7 +1,7 @@
 '''
-Created by Dengke Han, at 2022/07/24
+Created by Dengke Han, on 2022/07/24
 
-This file aims to draw graph from a adj matrix
+Code for: draw graph from a adj matrix
 '''
 
 import networkx as nx
@@ -11,6 +11,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import sys
 import pandas as pd
+import scipy.sparse as sp
 
 args=sys.argv
 

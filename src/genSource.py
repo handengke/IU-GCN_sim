@@ -1,17 +1,24 @@
 '''
- Created by Dengke Han, at 2022/06/18
+ Created by Dengke Han, on 2022/06/18
  
- This file aims to generate adj matrix from origin dataset.
+Code for: generate adj matrix / csc storage format from origin dataset.
 '''
 
 import numpy as np
 import pandas as pd
-import sys
+import argparse as ap
+import scipy.sparse as sp
 
-args=sys.argv
+parser=ap.ArgumentParser(description='to gen addjm and its csc format')
+parser.add_argument("-name",type=str,default='')
+parser.add_argument('-genadjm',type=bool,default=True)
+parser.add_argument('-gencsc',type=bool,default=False)
+args=parser.parse_args()
 
 #the name of selected dataset
-dataSet_name=args[1]
+dataSet_name=args.name
+genAdjm_flag=args.genadjm
+genCSC_flag=args.gencsc
 
 #the source path of the dataset
 dpath="./datasets/{name}".format(name=dataSet_name)
@@ -68,5 +75,14 @@ elif dataSet_name=='citeseer':
     
     print(adjm)
 
-#save the adjm into an txt file so that c++ source code can read and process it 
-np.savetxt('{path}/{name}_cites.txt'.format(path=dpath,name=dataSet_name), np.c_[adjm],fmt='%d',delimiter='\t')
+if genAdjm_flag:
+    #save the adjm into an txt file so that c++ source code can read and process it 
+    np.savetxt('{path}/{name}_cites.txt'.format(path=dpath,name=dataSet_name), adjm,fmt='%d',delimiter='\t')
+
+if genCSC_flag:
+    #to store the graph in CSC format
+    csc_adjm=sp.csc_matrix(adjm)
+    #'indptr' is offset, and 'indices' is edge
+    print(csc_adjm.indptr,csc_adjm.indices)
+    np.savetxt('{path}/{name}.off'.format(path=dpath,name=dataSet_name),csc_adjm.indptr,fmt='%d',delimiter='\n')
+    np.savetxt('{path}/{name}.edge'.format(path=dpath,name=dataSet_name),csc_adjm.indices,fmt='%d',delimiter='\n')

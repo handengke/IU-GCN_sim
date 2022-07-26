@@ -1,7 +1,7 @@
 '''
- Created by Dengke Han, at 2022/07/22
+ Created by Dengke Han, on 2022/07/22
  
- This file aims to analyze the result islandization.
+ This file aims to analyze the result of islandization.
 '''
 
 import sys

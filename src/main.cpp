@@ -1,5 +1,5 @@
 /*
-Created by Dengke Han, at 2022/06/10
+Created by Dengke Han, on 2022/06/10
 */
 
 #include<iostream>
@@ -60,6 +60,7 @@ void readFile(string filename, vector<vector<int>>& matrix){
         }
         matrix.push_back(lineArray); 
     }
+    inFile.close();
 }
 
 #ifdef RUN_TOY
