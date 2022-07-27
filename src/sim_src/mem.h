@@ -4,4 +4,8 @@
  Refer to unigcn_acc by YMY / Colleen
 */
 
-#include<assert.h>
+#include "object.h"
+
+class mem: public object{
+
+};

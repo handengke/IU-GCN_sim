@@ -1,12 +1,25 @@
+all:main
+
+algo_src_path:=./src/algo_src
+sim_src_path:=./src/sim_src
+target_path:=./build
+
 main: main.o Locator.o
-	g++ -g -o ./build/main ./build/main.o ./build/Locator.o
-main.o: ./src/main.cpp ./src/Locator.h
-	g++ -c ./src/main.cpp -o ./build/main.o
-Locator.o: ./src/Locator.cpp ./src/Locator.h
-	g++ -c ./src/Locator.cpp -o ./build/Locator.o
+	g++ -g -o $(target_path)/main $(target_path)/main.o $(target_path)/Locator.o
+main.o: ./src/main.cpp $(algo_src_path)/Locator.h
+	g++ -c ./src/main.cpp -o $(target_path)/main.o
+Locator.o: $(algo_src_path)/Locator.cpp $(algo_src_path)/Locator.h
+	g++ -c $(algo_src_path)/Locator.cpp -o $(target_path)/Locator.o
+
+
 clean:
-	rm ./build/*.o ./build/main ./build/run_log.txt ./build/Lislands.txt
+	rm $(target_path)/*.o $(target_path)/main $(target_path)/run_log.txt $(target_path)/Lislands.txt
+.PHONY: clean
+
 run:
-	./build/main>./build/run_log.txt
+	$(target_path)/main>$(target_path)/run_log.txt
+.PHONY: run
+
 debug:
-	gdb ./build/main
+	gdb $(target_path)/main
+.PHONY: debug

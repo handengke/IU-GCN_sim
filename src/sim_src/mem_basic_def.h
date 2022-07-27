@@ -5,6 +5,7 @@
 */
 #include<autodef.h>
 #include<inttypes.h>
+#include<basic_def.h>
 
 #define DATA_WIDTH                            (4) //bytes
 
@@ -22,17 +23,10 @@
 #endif
 
 
+#define PE_FRAME_AMOUNT                        8
+
 //on-chip memory configuation
 #define EXT_MEM_ALIGN_SIZE                (64 * MB_SIZE)
-
-//data type, use union to only allow one type of data stored
-struct data_unit_t
-{
-    union{
-        uint64_t fix;
-        double flt;
-    };
-};
 
 //active vertex type
 struct actv_vert_t{
@@ -54,5 +48,49 @@ struct edge_t{
 struct edge_ptr_t{
     uint64_t eptr;
 };
+
+//pe workload type
+enum workload_type_t{
+    EDGE_WORKLOAD_TYPE,
+    VERTEX_WORKLOAD_TYPE
+};
+
+//workload message type
+struct workload_msg_t{
+    workload_type_t type;
+    //for edge workload
+    data_unit_t value;
+    uint64_t edge_ptr;
+    int64_t edge_cnt;
+    //for vertex workload
+    uint64_t ver_pos;
+    int64_t ver_cnt;
+    //if this workload is the last one
+    bool bLast;
+};
+
+//to tell which phase is this entry in
+enum schedule_phase_t {
+    IN_AGG=0,
+    IN_COMB
+};
+
+//to tell how many operands does this entry need
+enum rf_entry_type_t{
+    IN_8_OPERAND=0,
+    IN_4_OPERAND,
+    IN_2_OPERAND
+};
+
+//the status of ready-to-fire buffer's entry
+struct rf_entry_status_t{
+    uint64_t main_vert_id;
+    uint64_t neighb_vert_id;
+
+    schedule_phase_t process_phase;
+    rf_entry_type_t entry_type;
+    bool if_cache_hit;
+};
+
 
 

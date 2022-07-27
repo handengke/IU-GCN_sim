@@ -10,9 +10,9 @@ import argparse as ap
 import scipy.sparse as sp
 
 parser=ap.ArgumentParser(description='to gen addjm and its csc format')
-parser.add_argument("-name",type=str,default='')
-parser.add_argument('-genadjm',type=bool,default=True)
-parser.add_argument('-gencsc',type=bool,default=False)
+parser.add_argument("-name",type=str,default='',help="the using dataset name ")
+parser.add_argument('-genadjm',type=bool,default=True,help="whether to generate adj matrix file")
+parser.add_argument('-gencsc',type=bool,default=False,help="whether to generate csc format file")
 args=parser.parse_args()
 
 #the name of selected dataset

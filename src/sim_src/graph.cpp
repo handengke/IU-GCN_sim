@@ -28,7 +28,7 @@ void graph_t::read_offset(){
     string line;
     vertex_cnt=0;
     while (getline(infile,line)){
-        actv_vert_table[vert_cnt].eptr=std::stol(line);
+        eptr_table[vertex_cnt].eptr=std::stol(line);
         vertex_cnt++;
     }
     vertex_cnt--;

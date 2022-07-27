@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#identify path
+algo_src_path=./src/algo_src
+sim_src_path=./src/sim_src
+
 name=$1
 echo "" > ./src/autodef.h
 echo "#define RUN_${name^^} " > ./src/autodef.h
@@ -27,5 +31,5 @@ fi
 echo "Run Success!"
 
 echo "Analyzing!"
-python3 ./src/statistic.py ${name,,}
+python3 ./src/tools_src/statistic.py ${name,,}
 echo "Finish!"

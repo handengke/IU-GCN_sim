@@ -6,7 +6,7 @@ Created by Dengke Han, on 2022/06/10
 #include<vector>
 #include<string>
 #include<bits/stdc++.h>
-#include "Locator.h"
+#include "./algo_src/locator.h"
 #include "autodef.h"
 using namespace std;
 

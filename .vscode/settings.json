@@ -9,6 +9,7 @@
         "string_view": "cpp",
         "string": "cpp",
         "queue": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "thread": "cpp"
     }
 }

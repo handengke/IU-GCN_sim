@@ -9,6 +9,13 @@
 #include<utility>
 using namespace std;
 
+#define error_print(fmt, x...) \
+do \
+{ \
+    printf("%s[%s,%d,%d]Error: " fmt, myname.c_str(), __FUNCTION__, __LINE__, get_global_time(),  ##x); \
+}while(0)\
+;
+
 void test(int& count){
     cout<<"i'm a thread! My id is "<<this_thread::get_id()<<endl;
     count+=1;
@@ -47,13 +54,23 @@ struct Island
     Island(vector<int> h,vector<int> n):hub_list{h},island_nodes(n){};
 };
 
+int get_global_time(){
+    return 100;
+}
+
+enum event_type_t{
+    PE_CAL_EVENT_TYPE,
+    ANOTHER_EVENT_TYPE
+};
 
 int main(){
-    // vector<int> v {1,2,4,5,6};
+    vector<int> v {1,2,4,5,6};
+    cout<<v.size()<<endl;
+    v.resize(3);
     // remove(v.begin(),v.end(),4);
     // v.erase(find(v.begin(),v.end(),4));
-    // for(auto e: v)
-    //     cout<<e<<' ';
+    for(auto e: v)
+        cout<<e<<' ';
 
     // cout<<endl;
     // cout<<v.size()<<" "<<v.capacity();
@@ -67,18 +84,18 @@ int main(){
     //     v.push_back(i);
     //     cout<<"the size of v is "<<v.size()<<endl;
     // }
-    vector<int> a {1,2,3,4};
-    vector<int> b {3,2,1,4};
-    map<int,int> mymap;
-    for(int i=0;i<a.size();i++)
-    {
-        mymap.insert(pair<int,int>(a[i],b[i]));
-    }
+    // vector<int> a {1,2,3,4};
+    // vector<int> b {3,2,1,4};
+    // map<int,int> mymap;
+    // for(int i=0;i<a.size();i++)
+    // {
+    //     mymap.insert(pair<int,int>(a[i],b[i]));
+    // }
 
-    for(int i=0;i<a.size();i++)
-    {
-        cout<<"b"<<i<<" is: "<<b[i]<<","<<"a"<<i<<" is: "<<mymap[b[i]]<<endl;
-    }
+    // for(int i=0;i<a.size();i++)
+    // {
+    //     cout<<"b"<<i<<" is: "<<b[i]<<","<<"a"<<i<<" is: "<<mymap[b[i]]<<endl;
+    // }
     // Island newIsland(a,b);
     // for(auto e: newIsland.hub_list){
     //     cout<<e<<" ";
@@ -88,15 +105,15 @@ int main(){
     //     cout<<e<<" ";
     // }
     // cout<<endl;    
-    a.pop_back();
-    for(auto e:a) cout<<e<<" ";
-    cout<<a.size()<<endl;
+    // a.pop_back();
+    // for(auto e:a) cout<<e<<" ";
+    // cout<<a.size()<<endl;
 
-    a.insert(a.begin(),2);
+    // a.insert(a.begin(),2);
 
-    for(auto e:a) cout<<e<<" ";
-    cout<<a.size()<<endl;
-    return 0;
+    // for(auto e:a) cout<<e<<" ";
+    // cout<<a.size()<<endl;
+    // return 0;
 //omp.cc
     // int count=0;
     // thread* th=new thread[4];
@@ -114,4 +131,8 @@ int main(){
     //     cout<<e[0]<<"---"<<e[1]<<endl;
     // }
 
+    // string myname="slid window";
+    // error_print("no error in fact");
+    // event_type_t event_type=PE_CAL_EVENT_TYPE;
+    // cout<<event_type<<endl;
 }
